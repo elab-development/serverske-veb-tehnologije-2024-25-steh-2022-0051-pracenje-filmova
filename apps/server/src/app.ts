@@ -1,29 +1,32 @@
-import cors from "cors";
-import express from "express";
-import helmet from "helmet";
-import morgan from "morgan";
+import { toNodeHandler } from "better-auth/node"
+import cors from "cors"
+import express from "express"
+import helmet from "helmet"
+import morgan from "morgan"
 
-import type MessageResponse from "./interfaces/message-response.js";
+import type MessageResponse from "./interfaces/message-response.js"
 
-import api from "./api/index.js";
-import * as middlewares from "./middlewares.js";
+import api from "./api/index.js"
+import { auth } from "./lib/auth.js"
+import * as middlewares from "./middlewares.js"
 
-const app = express();
+const app = express()
+app.all("/api/auth/{*any}", toNodeHandler(auth))
 
-app.use(morgan("dev"));
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
+app.use(morgan("dev"))
+app.use(helmet())
+app.use(cors())
+app.use(express.json())
 
 app.get<object, MessageResponse>("/", (req, res) => {
   res.json({
     message: "🦄🌈✨👋🌎🌍🌏✨🌈🦄",
-  });
-});
+  })
+})
 
-app.use("/api/v1", api);
+app.use("/api/v1", api)
 
-app.use(middlewares.notFound);
-app.use(middlewares.errorHandler);
+app.use(middlewares.notFound)
+app.use(middlewares.errorHandler)
 
-export default app;
+export default app

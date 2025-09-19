@@ -16,10 +16,15 @@
     "build": "tsc",
     "lint": "eslint --fix src test",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:push": "drizzle-kit push --config drizzle.config.mjs"
   },
   "dependencies": {
+    "@libsql/client": "^0.15.15",
+    "better-auth": "^1.3.12",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "drizzle-orm": "^0.44.5",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
@@ -32,10 +37,11 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.0.10",
     "@types/supertest": "^6.0.3",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^9.30.1",
     "eslint-plugin-format": "^1.0.1",
     "supertest": "^7.1.1",
-    "tsx": "^4.20.3",
+    "tsx": "^4.20.5",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   }

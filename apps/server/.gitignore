@@ -73,3 +73,5 @@ typings/
 .serverless
 
 dist
+
+src/db/local.db
