@@ -1,0 +1,43 @@
+name: "kteh-movie-app"
+services:
+  prod:
+    container_name: production
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    env_file: ".env"
+    volumes:
+      - modules:/app/node_modules/
+    networks:
+      - web
+    healthcheck:
+      test: node scripts/health-check.mjs
+      interval: 120s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+  dev:
+    container_name: dev
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfile-dev
+    ports:
+      - "5173:3000"
+    env_file: ".env" # set CHOKIDAR_USEPOLLING=true for HMR
+    volumes:
+      - .:/app
+      - modules-dev:/app/node_modules/
+    networks:
+      - web
+    profiles:
+      - dev
+volumes:
+  modules:
+  modules-dev:
+networks:
+  web:
+    driver: bridge
