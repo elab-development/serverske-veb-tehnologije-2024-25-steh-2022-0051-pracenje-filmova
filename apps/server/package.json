@@ -9,7 +9,7 @@
     "url": "https://github.com/w3cj/express-api-starter-ts.git"
   },
   "keywords": [],
-  "main": "src/index.ts",
+  "main": "src",
   "scripts": {
     "start": "node --env-file=.env dist/src/index.js",
     "dev": "tsx watch --env-file=.env src/index.ts",

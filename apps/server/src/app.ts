@@ -11,11 +11,17 @@ import { auth } from "./lib/auth.js"
 import * as middlewares from "./middlewares.js"
 
 const app = express()
-app.all("/api/auth/{*any}", toNodeHandler(auth))
-
 app.use(morgan("dev"))
 app.use(helmet())
-app.use(cors())
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  }),
+)
+app.all("/api/auth/{*any}", toNodeHandler(auth))
+
 app.use(express.json())
 
 app.get<object, MessageResponse>("/", (req, res) => {

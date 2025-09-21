@@ -1,9 +1,11 @@
 import { TMDBProvider } from "@/hooks/use-tmdb"
+import LoginPage from "@/routes/auth/login/page"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { Suspense, lazy } from "react"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import Layout from "./components/layout/layout"
+import SignUpPage from "./routes/auth/signup/page"
 import ErrorRoute from "./routes/error"
 import NotFound from "./routes/not-found"
 import SearchPage from "./routes/search/page"
@@ -100,6 +102,22 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={null}>
             <ExploreTvShows />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/auth/login",
+        element: (
+          <Suspense fallback={null}>
+            <LoginPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/auth/signup",
+        element: (
+          <Suspense fallback={null}>
+            <SignUpPage />
           </Suspense>
         ),
       },

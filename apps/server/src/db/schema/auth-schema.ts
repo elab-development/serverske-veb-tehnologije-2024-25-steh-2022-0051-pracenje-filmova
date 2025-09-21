@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -15,7 +15,8 @@ export const user = sqliteTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-});
+  role: text("role"),
+})
 
 export const session = sqliteTable("session", {
   id: text("id").primaryKey(),
@@ -32,7 +33,7 @@ export const session = sqliteTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-});
+})
 
 export const account = sqliteTable("account", {
   id: text("id").primaryKey(),
@@ -58,7 +59,7 @@ export const account = sqliteTable("account", {
   updatedAt: integer("updated_at", { mode: "timestamp" })
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-});
+})
 
 export const verification = sqliteTable("verification", {
   id: text("id").primaryKey(),
@@ -72,4 +73,4 @@ export const verification = sqliteTable("verification", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-});
+})
