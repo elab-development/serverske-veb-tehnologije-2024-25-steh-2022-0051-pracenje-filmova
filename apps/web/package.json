@@ -14,6 +14,7 @@
     "@fontsource-variable/inter": "^5.0.18",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-scroll-area": "^1.1.0",
     "@radix-ui/react-select": "^2.1.1",
@@ -37,7 +38,6 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "backend": "workspace:*",
     "@testing-library/react": "^16.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^20.14.7",
@@ -47,6 +47,7 @@
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
+    "backend": "workspace:*",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",

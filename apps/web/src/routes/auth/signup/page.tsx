@@ -69,7 +69,7 @@ function SignUpPage() {
 
   return (
     <section>
-      <SectionTitle>Login</SectionTitle>
+      <SectionTitle>Sign up</SectionTitle>
       <Separator className="mb-12 mt-2" />
       <div className="grid place-items-center">
         <div className="w-full max-w-sm space-y-8">

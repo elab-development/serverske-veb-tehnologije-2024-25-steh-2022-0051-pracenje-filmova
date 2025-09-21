@@ -1,8 +1,7 @@
 import Logo from "@/components/logo"
-import { Button } from "@/components/ui/button"
-import { HeartIcon } from "lucide-react"
 import { Link, Form as ReactRouterForm } from "react-router-dom"
 import { MobileSidebar } from "../sidebar"
+import ProfileDropdown from "./profile-dropdown"
 import SearchBar from "./search-bar"
 
 const Navbar = () => {
@@ -22,13 +21,13 @@ const Navbar = () => {
           <SearchBar />
         </ReactRouterForm>
         <div className="flex items-center gap-2 sm:flex-1 sm:justify-end md:flex-none">
-          <Button asChild variant={"secondary"} size={"icon"}>
+          {/* <Button asChild variant={"secondary"} size={"icon"}>
             <Link to="/watchlist">
               <HeartIcon height={"1.125em"} />
               <span className="sr-only">View watchlist</span>
             </Link>
-          </Button>
-
+          </Button> */}
+          <ProfileDropdown />
           <MobileSidebar />
         </div>
       </div>
