@@ -42,8 +42,10 @@ const ProfileDropdown = () => {
           {data?.user?.name ?? data?.user?.email ?? "Profile"}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <HeartIcon /> Watchlist
+        <DropdownMenuItem asChild>
+          <Link to={"/watchlist"}>
+            <HeartIcon /> Watchlist
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <SettingsIcon /> Profile settings

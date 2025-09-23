@@ -4,6 +4,7 @@ import { customSession } from "better-auth/plugins"
 import { eq } from "drizzle-orm"
 import { db } from "../db/drizzle"
 import * as authSchema from "../db/schema/auth-schema"
+import { watchlist } from "../db/schema/watchlist-schema"
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "sqlite",
@@ -22,6 +23,19 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        async after(user) {
+          const createdWatchlist = await db.insert(watchlist).values({
+            userId: user.id,
+            jsonData: JSON.stringify([]),
+            id: crypto.randomUUID(),
+          })
+        },
+      },
+    },
   },
   trustedOrigins: ["http://localhost:5173"],
   plugins: [

@@ -1,6 +1,7 @@
 import MediaItemLoader from "@/components/media-item-loader"
 import SectionTitle from "@/components/ui/section-title"
 import { Separator } from "@/components/ui/separator"
+import { useProtectedPage } from "@/hooks/use-protected-page"
 import { useSetPageTitle } from "@/hooks/use-set-page-title"
 import { useWatchListDetails } from "@/hooks/use-watchlist"
 import ClearWatchlist from "./_components/ClearWatchlist"
@@ -13,6 +14,10 @@ import WatchlistMediaItem, {
 } from "./_components/WatchlistMediaItem"
 
 const WatchlistPage = () => {
+  const { isPending, session, error } = useProtectedPage()
+  if (error) {
+    throw new Error(error.message)
+  }
   const watchList = useWatchListDetails()
   useSetPageTitle("Watchlist")
   return (
