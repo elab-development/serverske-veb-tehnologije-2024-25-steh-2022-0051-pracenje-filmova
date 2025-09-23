@@ -14,10 +14,7 @@ import WatchlistMediaItem, {
 } from "./_components/WatchlistMediaItem"
 
 const WatchlistPage = () => {
-  const { isPending, session, error } = useProtectedPage()
-  if (error) {
-    throw new Error(error.message)
-  }
+  useProtectedPage()
 
   const watchList = useWatchListDetails()
   useSetPageTitle("Watchlist")
