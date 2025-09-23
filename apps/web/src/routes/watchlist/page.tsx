@@ -18,6 +18,7 @@ const WatchlistPage = () => {
   if (error) {
     throw new Error(error.message)
   }
+
   const watchList = useWatchListDetails()
   useSetPageTitle("Watchlist")
   return (

@@ -6,8 +6,10 @@ import morgan from "morgan"
 
 import type MessageResponse from "./interfaces/message-response.js"
 
-import api from "./api/index.js"
+import * as trpcExpress from "@trpc/server/adapters/express"
 import { auth } from "./lib/auth.js"
+import { createContext } from "./lib/trpc/context.js"
+import { appRouter } from "./lib/trpc/routers/_app.js"
 import * as middlewares from "./middlewares.js"
 
 const app = express()
@@ -24,13 +26,19 @@ app.all("/api/auth/{*any}", toNodeHandler(auth))
 
 app.use(express.json())
 
+app.use(
+  "/trpc",
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext: createContext,
+  }),
+)
+
 app.get<object, MessageResponse>("/", (req, res) => {
   res.json({
     message: "🦄🌈✨👋🌎🌍🌏✨🌈🦄",
   })
 })
-
-app.use("/api/v1", api)
 
 app.use(middlewares.notFound)
 app.use(middlewares.errorHandler)

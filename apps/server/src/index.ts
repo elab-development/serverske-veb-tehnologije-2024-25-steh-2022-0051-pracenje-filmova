@@ -3,6 +3,7 @@ import { env } from "./env.js"
 
 // Re-export types for workspace consumers
 export type { AuthServer } from "./lib/auth"
+export type { AppRouter } from "./lib/trpc/routers/_app.js"
 
 const port = env.PORT
 const server = app.listen(port, () => {

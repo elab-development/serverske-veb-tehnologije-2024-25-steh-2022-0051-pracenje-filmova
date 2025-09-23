@@ -1,10 +1,11 @@
 import { TMDBProvider } from "@/hooks/use-tmdb"
 import LoginPage from "@/routes/auth/login/page"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { Suspense, lazy } from "react"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import Layout from "./components/layout/layout"
+import { queryClient } from "./lib/trpc"
 import SignUpPage from "./routes/auth/signup/page"
 import ErrorRoute from "./routes/error"
 import NotFound from "./routes/not-found"
@@ -18,7 +19,7 @@ const GenreMovies = lazy(() => import("@/routes/genre/movies/[id]/page"))
 const GenreTv = lazy(() => import("@/routes/genre/tv/[id]/page"))
 const ExploreMovies = lazy(() => import("@/routes/movies/[element]/page"))
 
-const queryClient = new QueryClient()
+// const qc = new QueryClient()
 
 const router = createBrowserRouter([
   {

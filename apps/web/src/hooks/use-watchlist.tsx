@@ -1,4 +1,5 @@
 import { useTMDB } from "@/hooks/use-tmdb"
+import { trpc } from "@/lib/trpc"
 import {
   useMutation,
   useQueries,
@@ -11,16 +12,30 @@ export type WatchList = Array<WatchListItem>
 
 export const useWatchList = () => {
   //getting watchlist from local storage with react query
-  const query = useQuery({
-    queryKey: ["watchList"],
-    queryFn: () => {
-      const watchList = localStorage.getItem("watchList")
-      return watchList ? (JSON.parse(watchList) as WatchList) : []
-    },
-    staleTime: Infinity,
-  })
+  // const query = useQuery({
+  //   queryKey: ["watchList"],
+  //   queryFn: () => {
+  //     const watchList = localStorage.getItem("watchList")
+  //     return watchList ? (JSON.parse(watchList) as WatchList) : []
+  //   },
+  //   staleTime: Infinity,
+  // })
 
-  return query
+  const queryTrpc = useQuery(
+    trpc.watchlist.getUserWatchlist.queryOptions(undefined, {
+      staleTime: Infinity,
+    }),
+  )
+
+  return {
+    ...queryTrpc,
+    data: queryTrpc.data
+      ? {
+          ...queryTrpc.data,
+          jsonData: JSON.parse(queryTrpc.data.jsonData) as WatchList,
+        }
+      : undefined,
+  }
 }
 
 export const useWatchListDetails = () => {
@@ -29,7 +44,7 @@ export const useWatchListDetails = () => {
   //getting watchlist details from local storage with react query
   const query = useQueries({
     queries:
-      watchList.data?.map((item) => ({
+      watchList.data?.jsonData.map((item) => ({
         queryKey: [item.mediaType, item.id],
         queryFn: () => {
           if (item.mediaType === "movie") {
@@ -51,50 +66,50 @@ export const useWatchListDetails = () => {
 
 export const useMutateWatchlist = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationKey: ["watchlist"],
-    mutationFn: async (newItem: WatchListItem) => {
-      let watchList = JSON.parse(
-        localStorage.getItem("watchList") || "[]",
-      ) as WatchList
+  const mutation = useMutation(
+    trpc.watchlist.updateUserWatchlist.mutationOptions({
+      onMutate: async (newItem) => {
+        //optimistic update
 
-      const existingItem = watchList.findIndex(
-        (item) =>
-          item.id === newItem.id && item.mediaType === newItem.mediaType,
-      )
-      if (existingItem !== -1) {
-        watchList = watchList.filter((item) => item.id !== newItem.id)
-      } else {
-        watchList.push(newItem)
-      }
-      localStorage.setItem("watchList", JSON.stringify(watchList))
-      return watchList
-    },
-    onMutate: async (newItem: WatchListItem) => {
-      //optimistic update
-      await queryClient.cancelQueries({
-        queryKey: ["watchList"],
-      })
-      queryClient.setQueryData<WatchList | undefined>(["watchList"], (old) => {
-        if (!old) return
-        const existingItem = old.findIndex(
-          (item) =>
-            item.id === newItem.id && item.mediaType === newItem.mediaType,
+        await queryClient.cancelQueries({
+          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+        })
+        queryClient.setQueryData(
+          trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+          (old) => {
+            if (!old) return
+            const parsedData = JSON.parse(old.jsonData) as WatchListItem[]
+            const existingItem = parsedData.findIndex(
+              (item) =>
+                item.id === newItem.id && item.mediaType === newItem.mediaType,
+            )
+            if (existingItem !== -1) {
+              return {
+                ...old,
+                jsonData: JSON.stringify(
+                  parsedData.filter((item) => item.id !== newItem.id),
+                ),
+              }
+            } else {
+              parsedData.push({
+                id: newItem.id,
+                mediaType: newItem.mediaType as "movie" | "tv",
+              })
+              return {
+                ...old,
+                jsonData: JSON.stringify(parsedData),
+              }
+            }
+          },
         )
-        if (existingItem !== -1) {
-          return old.filter((item) => item.id !== newItem.id)
-        } else {
-          old.push(newItem)
-          return old
-        }
-      })
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["watchList"],
-      })
-    },
-  })
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+        })
+      },
+    }),
+  )
 
   return mutation
 }

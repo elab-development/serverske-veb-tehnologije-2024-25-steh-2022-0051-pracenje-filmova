@@ -20,7 +20,7 @@ const WatchListButton = ({
   withText?: boolean
 }) => {
   const watchList = useWatchList()
-  const isWatchlisted = watchList.data?.some(
+  const isWatchlisted = watchList.data?.jsonData.some(
     (item) => item.id === mediaId && item.mediaType === mediaType,
   )
   const watchListMutate = useMutateWatchlist()

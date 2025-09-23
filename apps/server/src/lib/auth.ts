@@ -40,16 +40,16 @@ export const auth = betterAuth({
   trustedOrigins: ["http://localhost:5173"],
   plugins: [
     customSession(async ({ user, session }) => {
-      const roles = await db
-        .select({
-          role: authSchema.user.role,
-        })
-        .from(authSchema.user)
-        .where(eq(authSchema.user.id, user.id))
+      const userRole = await db.query.user.findFirst({
+        where: eq(authSchema.user.id, user.id),
+        columns: {
+          role: true,
+        },
+      })
       return {
         user: {
           ...user,
-          role: roles[0]?.role || "kiturina serverska",
+          role: userRole?.role || "error",
         },
         session,
       }
