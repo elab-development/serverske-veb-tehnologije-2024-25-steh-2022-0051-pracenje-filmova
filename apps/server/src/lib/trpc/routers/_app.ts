@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { publicProcedure, router } from "../trpc"
+import { reportsRouter } from "./reports"
 import { watchListRouter } from "./watchlist"
 
 export const appRouter = router({
@@ -13,14 +14,7 @@ export const appRouter = router({
       return { id: input, name: "Bilbo" }
     }),
   watchlist: watchListRouter,
-  //   createUser: t.procedure
-  //     .input(z.object({ name: z.string().min(5) }))
-  //     .mutation(async (opts) => {
-  //       // use your ORM of choice
-  //       return await UserModel.create({
-  //         data: opts.input,
-  //       });
-  //     }),
+  reports: reportsRouter,
 })
 // export type definition of API
 export type AppRouter = typeof appRouter

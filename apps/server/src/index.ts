@@ -2,9 +2,9 @@ import app from "./app.js"
 import { env } from "./env.js"
 
 // Re-export types for workspace consumers
+export type { BugFlagEnum, BugStatusEnum } from "./db/schema/report-schema.js"
 export type { AuthServer } from "./lib/auth"
 export type { AppRouter } from "./lib/trpc/routers/_app.js"
-
 const port = env.PORT
 const server = app.listen(port, () => {
   /* eslint-disable no-console */

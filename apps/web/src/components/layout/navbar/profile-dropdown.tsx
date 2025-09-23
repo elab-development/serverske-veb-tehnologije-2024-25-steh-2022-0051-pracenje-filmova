@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { authClient } from "@/lib/auth-client"
 import {
+  BugIcon,
   HeartIcon,
   LogInIcon,
   LogOutIcon,
@@ -49,6 +50,11 @@ const ProfileDropdown = () => {
         </DropdownMenuItem>
         <DropdownMenuItem>
           <SettingsIcon /> Profile settings
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to={"/report"}>
+            <BugIcon /> Report a bug
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {data?.user ? (
