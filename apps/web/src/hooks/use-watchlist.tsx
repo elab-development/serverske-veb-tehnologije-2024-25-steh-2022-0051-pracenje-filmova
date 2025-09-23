@@ -11,21 +11,7 @@ export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
 export type WatchList = Array<WatchListItem>
 
 export const useWatchList = () => {
-  //getting watchlist from local storage with react query
-  // const query = useQuery({
-  //   queryKey: ["watchList"],
-  //   queryFn: () => {
-  //     const watchList = localStorage.getItem("watchList")
-  //     return watchList ? (JSON.parse(watchList) as WatchList) : []
-  //   },
-  //   staleTime: Infinity,
-  // })
-
-  const queryTrpc = useQuery(
-    trpc.watchlist.getUserWatchlist.queryOptions(undefined, {
-      staleTime: Infinity,
-    }),
-  )
+  const queryTrpc = useQuery(trpc.watchlist.getUserWatchlist.queryOptions())
 
   return {
     ...queryTrpc,
