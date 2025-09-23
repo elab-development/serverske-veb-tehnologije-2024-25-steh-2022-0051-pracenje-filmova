@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useToast } from "@/components/ui/use-toast"
-import { useSetWatchlist, useWatchList } from "@/hooks/use-watchlist"
+import { useClearWatchlist, useWatchList } from "@/hooks/use-watchlist"
 import { ToastOptions } from "@/lib/models/toast-options"
 import { TrashIcon } from "lucide-react"
 import { useState } from "react"
@@ -17,14 +17,14 @@ import { useState } from "react"
 const ClearWatchlist = () => {
   const [open, setOpen] = useState(false)
   const { toast } = useToast()
-  const setWatchlistMutation = useSetWatchlist()
+  const clearMutation = useClearWatchlist()
   const watchlist = useWatchList()
   const isDisabled =
     watchlist.isLoading ||
     watchlist.isError ||
-    setWatchlistMutation.isPending ||
-    setWatchlistMutation.isPaused ||
-    watchlist.data?.length === 0
+    clearMutation.isPending ||
+    clearMutation.isPaused ||
+    watchlist.data?.jsonData.length === 0
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -47,7 +47,7 @@ const ClearWatchlist = () => {
             disabled={isDisabled}
             variant={"destructive"}
             onClick={() => {
-              setWatchlistMutation.mutate([])
+              clearMutation.mutate()
               setOpen(false)
               toast(ToastOptions.createDefault().setTitle("Watchlist cleared"))
             }}

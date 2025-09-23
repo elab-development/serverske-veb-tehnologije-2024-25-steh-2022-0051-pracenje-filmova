@@ -10,39 +10,40 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { useSetWatchlist, useWatchList } from "@/hooks/use-watchlist"
+import { Input } from "@/components/ui/input"
+import { useImportWatchlist, useWatchList } from "@/hooks/use-watchlist"
 import { ToastOptions } from "@/lib/models/toast-options"
 import { ImportIcon, Link2Icon } from "lucide-react"
 import { useRef, useState } from "react"
 
 export const ImportWatchlist = () => {
   const [open, setOpen] = useState(false)
-  const importMutation = useSetWatchlist()
+  const importMutation = useImportWatchlist()
   const [code, setCode] = useState("")
   const { toast } = useToast()
   const handleImport = () => {
-    let object
+    // let object
 
     try {
-      object = JSON.parse(code)
-      if (
-        !Array.isArray(object) ||
-        object.length === 0 ||
-        object.some((item) => !item.mediaType || !item.id)
-      )
-        throw new Error("Invalid code")
+      importMutation.mutate(code)
+      // object = JSON.parse(code)
+      // if (
+      //   !Array.isArray(object) ||
+      //   object.length === 0 ||
+      //   object.some((item) => !item.mediaType || !item.id)
+      // )
+      //   throw new Error("Invalid import")
     } catch (e) {
       toast(
         ToastOptions.createDestructive()
-          .setTitle("Invalid code")
+          .setTitle("Invalid import")
           .setDescription("The code you entered is invalid")
           .setDuration(3000),
       )
       return
     }
 
-    importMutation.mutate(object)
+    // importMutation.mutate(object)
     toast(
       ToastOptions.create()
         .setTitle("Watchlist imported")
@@ -72,11 +73,12 @@ export const ImportWatchlist = () => {
             Paste your watchlist code here to import it
           </DialogDescription>
           <div className="!my-4">
-            <Textarea
+            <Input
+              autoComplete="off"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="Paste your watchlist code here"
-            ></Textarea>
+            ></Input>
           </div>
 
           <DialogFooter>
@@ -92,12 +94,13 @@ export const ImportWatchlist = () => {
 export const ExportWatchlist = () => {
   const [open, setOpen] = useState(false)
   const currentWatchlist = useWatchList()
-  const code = JSON.stringify(currentWatchlist.data)
+  const code = currentWatchlist.data?.id || ""
   const { toast } = useToast()
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
-  const canCopy = currentWatchlist.data && currentWatchlist.data.length > 0
+  const inputRef = useRef<HTMLInputElement>(null)
+  const canCopy =
+    code && currentWatchlist.data && currentWatchlist.data.jsonData.length > 0
   const handleCopy = () => {
-    if (textAreaRef.current === null || code !== textAreaRef.current.value) {
+    if (inputRef.current === null || code !== inputRef.current.value) {
       toast(
         ToastOptions.createDestructive()
           .setTitle("Error")
@@ -105,8 +108,8 @@ export const ExportWatchlist = () => {
       )
       return
     }
-    textAreaRef.current?.focus()
-    textAreaRef.current?.select()
+    inputRef.current?.focus()
+    inputRef.current?.select()
     document.execCommand("copy")
     toast(
       ToastOptions.create()
@@ -136,14 +139,14 @@ export const ExportWatchlist = () => {
             Copy the code below to import your watchlist on another device
           </DialogDescription>
           <div className="!my-4">
-            <Textarea
-              ref={textAreaRef}
+            <Input
+              ref={inputRef}
               onClick={(e) => e.currentTarget.select()}
               value={canCopy ? code : "Your watchlist is empty"}
               className="!resize-none"
               readOnly
               placeholder="Paste your watchlist code here"
-            ></Textarea>
+            ></Input>
           </div>
           {canCopy && (
             <DialogFooter>

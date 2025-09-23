@@ -63,4 +63,59 @@ export const watchListRouter = router({
         .returning()
       return updatedWatchlist[0]
     }),
+  importWatchlist: protectedProcedure
+    .input(
+      z.string(), // watchlist id to be imported
+    )
+    .mutation(async ({ ctx, input }) => {
+      const usersWatchlist = await db.query.watchlist.findFirst({
+        where: eq(watchlist.userId, ctx.user.id),
+      })
+      if (!usersWatchlist) {
+        throw new Error("User's watchlist not found")
+      }
+      const watchlistToImport = await db.query.watchlist.findFirst({
+        where: eq(watchlist.id, input),
+      })
+      if (!watchlistToImport) {
+        throw new Error("Watchlist to import not found")
+      }
+      const usersCurrentWatchlist: WatchListItem[] = JSON.parse(
+        usersWatchlist.jsonData,
+      )
+      const importWatchlistItems: WatchListItem[] = JSON.parse(
+        watchlistToImport.jsonData,
+      )
+      const mergedWatchlist = [
+        ...usersCurrentWatchlist,
+        ...importWatchlistItems.filter(
+          (importItem) =>
+            !usersCurrentWatchlist.some(
+              (userItem) =>
+                userItem.id === importItem.id &&
+                userItem.mediaType === importItem.mediaType,
+            ),
+        ),
+      ]
+      const updatedWatchlist = await db
+        .update(watchlist)
+        .set({ jsonData: JSON.stringify(mergedWatchlist) })
+        .where(eq(watchlist.id, usersWatchlist.id))
+        .returning()
+      return updatedWatchlist[0]
+    }),
+  clearWatchlist: protectedProcedure.mutation(async ({ ctx }) => {
+    const usersWatchlist = await db.query.watchlist.findFirst({
+      where: eq(watchlist.userId, ctx.user.id),
+    })
+    if (!usersWatchlist) {
+      throw new Error("User's watchlist not found")
+    }
+    const updatedWatchlist = await db
+      .update(watchlist)
+      .set({ jsonData: JSON.stringify([]) })
+      .where(eq(watchlist.id, usersWatchlist.id))
+      .returning()
+    return updatedWatchlist[0]
+  }),
 })

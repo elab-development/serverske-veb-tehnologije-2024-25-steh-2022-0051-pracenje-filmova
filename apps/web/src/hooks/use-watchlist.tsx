@@ -100,27 +100,31 @@ export const useMutateWatchlist = () => {
   return mutation
 }
 
-export const useSetWatchlist = () => {
+export const useImportWatchlist = () => {
   const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationKey: ["watchlist"],
-    mutationFn: async (newList: WatchList) => {
-      localStorage.setItem("watchList", JSON.stringify(newList))
-      return newList
-    },
-    onMutate: async (newList: WatchList) => {
-      //optimistic update
-      await queryClient.cancelQueries({
-        queryKey: ["watchList"],
-      })
-      queryClient.setQueryData<WatchList | undefined>(["watchList"], newList)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["watchList"],
-      })
-    },
-  })
+  const mutation = useMutation(
+    trpc.watchlist.importWatchlist.mutationOptions({
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+        })
+      },
+    }),
+  )
 
+  return mutation
+}
+
+export const useClearWatchlist = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(
+    trpc.watchlist.clearWatchlist.mutationOptions({
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+        })
+      },
+    }),
+  )
   return mutation
 }
