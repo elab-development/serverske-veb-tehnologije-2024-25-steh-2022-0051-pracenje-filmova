@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import SectionTitle from "@/components/ui/section-title"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/components/ui/use-toast"
+import { useSetPageTitle } from "@/hooks/use-set-page-title"
 import { authClient } from "@/lib/auth-client"
 import { ToastOptions } from "@/lib/models/toast-options"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -26,6 +27,8 @@ const loginSchema = z.object({
 })
 
 function LoginPage() {
+  useSetPageTitle("Login")
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

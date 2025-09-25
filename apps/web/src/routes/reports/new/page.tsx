@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 import { useProtectedPage } from "@/hooks/use-protected-page"
+import { useSetPageTitle } from "@/hooks/use-set-page-title"
 import { ToastOptions } from "@/lib/models/toast-options"
 import { trpc } from "@/lib/trpc"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -51,6 +52,8 @@ const reportSchema = z.object({
 })
 
 const ReportPage = () => {
+  useSetPageTitle("Submit a report")
+
   const { session } = useProtectedPage()
   const { toast } = useToast()
 
@@ -88,6 +91,7 @@ const ReportPage = () => {
   if (!session?.user) {
     return null
   }
+
   return (
     <section>
       <SectionTitle>Report a bug</SectionTitle>

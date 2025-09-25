@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/table"
 import usePageNumber from "@/hooks/use-page-number"
 import { useProtectedPage } from "@/hooks/use-protected-page"
+import { useSetPageTitle } from "@/hooks/use-set-page-title"
 import { useUnsavedChanges } from "@/hooks/use-unsaved-changes"
 import { trpc } from "@/lib/trpc"
 import { cn } from "@/lib/utils"
@@ -50,6 +51,7 @@ const flagColors: Record<BugFlagEnum, string> = {
 }
 
 const AllReportsPage = () => {
+  useSetPageTitle("All bug reports")
   const { session } = useProtectedPage("admin")
   const { pageNumber, setPageNumber } = usePageNumber()
 
