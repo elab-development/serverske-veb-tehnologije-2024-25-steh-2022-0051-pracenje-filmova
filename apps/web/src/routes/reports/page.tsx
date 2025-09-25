@@ -1,6 +1,7 @@
 import PaginationBar from "@/components/pagination-bar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import SectionTitle from "@/components/ui/section-title"
@@ -27,6 +28,7 @@ import { useUnsavedChanges } from "@/hooks/use-unsaved-changes"
 import { trpc } from "@/lib/trpc"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import type { BugFlagEnum } from "backend"
+import { SearchIcon } from "lucide-react"
 import ReportContentDialog from "./_components/report-content-dialog"
 import StatusSelect from "./_components/status-select"
 import { bugFlagEnum } from "./new/page"
@@ -40,7 +42,7 @@ const sortNames: Record<(typeof sortVars)[number], string> = {
 
 const AllReportsPage = () => {
   const { session } = useProtectedPage("admin")
-  const { pageNumber } = usePageNumber()
+  const { pageNumber, setPageNumber } = usePageNumber()
 
   const filters = useUnsavedChanges<{
     sortBy: (typeof sortVars)[number]
@@ -49,16 +51,18 @@ const AllReportsPage = () => {
     limit: number
     status?: "resolved" | "unresolved"
     resolvedByAdmin: boolean
+    id?: string
   }>({
     sortBy: "createdAt",
     flag: undefined,
     sortOrder: "desc",
-    limit: 3,
+    limit: 10,
     status: undefined,
     resolvedByAdmin: false,
+    id: undefined,
   })
 
-  const { data, isPending } = useQuery(
+  const { data, isPending, error } = useQuery(
     trpc.reports.getAllReports.queryOptions({
       limit: filters.state.limit,
       offset: (pageNumber - 1) * filters.state.limit,
@@ -67,6 +71,7 @@ const AllReportsPage = () => {
       flag: filters.state.flag,
       status: filters.state.status,
       adminId: filters.state.resolvedByAdmin ? session?.user?.id : undefined,
+      id: filters.state.id,
     }),
   )
 
@@ -83,6 +88,7 @@ const AllReportsPage = () => {
         flag: filters.state.flag,
         status: filters.state.status,
         adminId: filters.state.resolvedByAdmin ? session?.user?.id : undefined,
+        id: filters.state.id,
       }),
       (oldData) =>
         oldData && oldData.reports
@@ -113,11 +119,40 @@ const AllReportsPage = () => {
         onSubmit={(e) => {
           e.preventDefault()
           filters.saveChanges()
+          setPageNumber(1)
         }}
       >
         <ScrollArea className="whitespace-nowrap pb-2">
           <div className="mb-2 flex flex-col gap-2">
             <div className="flex flex-col gap-2 sm:flex-row md:gap-4">
+              <div>
+                <Label htmlFor="status">ID</Label>
+                <div className="relative w-44">
+                  <Input
+                    autoComplete="off"
+                    onChange={(v) =>
+                      filters.setUnsavedChanges((f) => ({
+                        ...f,
+                        id:
+                          v.target.value.length === 0
+                            ? undefined
+                            : v.target.value,
+                      }))
+                    }
+                    defaultValue={filters.state.id ?? ""}
+                    placeholder="Report ID"
+                  />
+
+                  <Button
+                    disabled={true}
+                    variant={"ghost"}
+                    size={"icon"}
+                    className="absolute right-0 top-0 h-full"
+                  >
+                    <SearchIcon height={"1em"} />
+                  </Button>
+                </div>
+              </div>
               <div>
                 <Label htmlFor="flag">Flag</Label>
                 <Select
@@ -301,7 +336,8 @@ const AllReportsPage = () => {
                       <TableCell colSpan={7} />
                     </TableRow>
                   ))}
-                {isPending &&
+                {!error &&
+                  isPending &&
                   Array.from({ length: filters.state.limit }).map((_, i) => (
                     <TableRow
                       key={`loading-${i}`}
@@ -316,6 +352,15 @@ const AllReportsPage = () => {
                       />
                     </TableRow>
                   ))}
+                {error && !data && !isPending && (
+                  <TableRow className="h-14">
+                    <TableCell colSpan={7} className="text-center">
+                      <span className="text-destructive">
+                        Error loading reports: {error.message}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
             <ScrollBar orientation="horizontal" className="md:h-4" />

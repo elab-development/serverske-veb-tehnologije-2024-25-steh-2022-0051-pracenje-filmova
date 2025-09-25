@@ -6,6 +6,7 @@ import {
   eq,
   getTableColumns,
   isNotNull,
+  like,
 } from "drizzle-orm"
 import z from "zod"
 import { db } from "../../../db/drizzle"
@@ -50,6 +51,7 @@ export const reportsRouter = router({
         offset: z.number().min(0).default(0),
         sortBy: z.enum(["createdAt", "title"]).default("createdAt"),
         sortOrder: z.enum(["asc", "desc"]).default("desc"),
+        id: z.string().max(64).optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -65,6 +67,9 @@ export const reportsRouter = router({
       }
       if (input.adminId) {
         whereClauses.push(eq(bugReport.adminId, input.adminId))
+      }
+      if (input.id) {
+        whereClauses.push(like(bugReport.id, `%${input.id}%`))
       }
       const reports = await db
         .select({
