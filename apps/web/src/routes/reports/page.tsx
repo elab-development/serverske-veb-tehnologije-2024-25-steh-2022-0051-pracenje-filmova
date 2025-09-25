@@ -26,6 +26,7 @@ import usePageNumber from "@/hooks/use-page-number"
 import { useProtectedPage } from "@/hooks/use-protected-page"
 import { useUnsavedChanges } from "@/hooks/use-unsaved-changes"
 import { trpc } from "@/lib/trpc"
+import { cn } from "@/lib/utils"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import type { BugFlagEnum } from "backend"
 import { SearchIcon } from "lucide-react"
@@ -38,6 +39,14 @@ const sortVars = ["createdAt", "title"] as const
 const sortNames: Record<(typeof sortVars)[number], string> = {
   createdAt: "Creation date",
   title: "Title",
+}
+
+const flagColors: Record<BugFlagEnum, string> = {
+  Backend: "bg-violet-800 text-violet-100", // something other than red or green
+  UI: "bg-blue-800 text-blue-100",
+  Performance: "bg-pink-800 text-pink-100",
+  Security: "bg-yellow-800 text-yellow-100",
+  Other: "bg-gray-800 text-gray-100",
 }
 
 const AllReportsPage = () => {
@@ -173,8 +182,16 @@ const AllReportsPage = () => {
                         Any
                       </SelectItem>
                       {bugFlagEnum.map((s) => (
-                        <SelectItem key={s} value={s}>
-                          {s}
+                        <SelectItem key={s} value={s} className="">
+                          <span className="flex h-full items-center gap-2">
+                            <span
+                              className={cn(
+                                "inline-block size-2 rounded-full",
+                                flagColors[s],
+                              )}
+                            ></span>{" "}
+                            {s}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -297,7 +314,12 @@ const AllReportsPage = () => {
                         </ReportContentDialog>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={"secondary"}>{r.flag}</Badge>
+                        <Badge
+                          variant={"outline"}
+                          className={flagColors[r.flag]}
+                        >
+                          {r.flag}
+                        </Badge>
                       </TableCell>
                       <TableCell className="min-w-40">
                         {new Date(r.createdAt).toLocaleString("en-US", {
