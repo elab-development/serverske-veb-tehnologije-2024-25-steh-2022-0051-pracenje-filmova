@@ -1,9 +1,9 @@
 import * as SelectPrimitive from "@radix-ui/react-select"
 import {
   ChevronsUpDownIcon as CaretSortIcon,
-  CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  DotIcon,
 } from "lucide-react"
 import * as React from "react"
 
@@ -128,7 +128,7 @@ const SelectItem = React.forwardRef<
   >
     <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <CheckIcon className="h-4 w-4" />
+        <DotIcon className="size-6" />
       </SelectPrimitive.ItemIndicator>
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

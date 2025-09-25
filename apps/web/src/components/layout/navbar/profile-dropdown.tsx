@@ -10,6 +10,7 @@ import {
 import { authClient } from "@/lib/auth-client"
 import {
   BugIcon,
+  FlagIcon,
   HeartIcon,
   LogInIcon,
   LogOutIcon,
@@ -19,7 +20,7 @@ import {
 import { Link, useNavigate } from "react-router-dom"
 
 const ProfileDropdown = () => {
-  const { data, error, isPending } = authClient.useSession()
+  const { data, isPending } = authClient.useSession()
   const navigate = useNavigate()
   if (isPending) {
     return (
@@ -32,7 +33,7 @@ const ProfileDropdown = () => {
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button variant="outline" size={"icon"}>
           <UserIcon height={"1.25em"} />
           <span className="sr-only">Open profile menu</span>
@@ -56,6 +57,16 @@ const ProfileDropdown = () => {
             <BugIcon /> Report a bug
           </Link>
         </DropdownMenuItem>
+        {data?.user.role === "admin" && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link to={"/reports"}>
+                <FlagIcon /> All reports
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         {data?.user ? (
           <DropdownMenuItem

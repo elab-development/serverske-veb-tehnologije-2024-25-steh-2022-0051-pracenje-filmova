@@ -10,6 +10,7 @@ import SignUpPage from "./routes/auth/signup/page"
 import ErrorRoute from "./routes/error"
 import NotFound from "./routes/not-found"
 import ReportPage from "./routes/reports/new/page"
+import AllReportsPage from "./routes/reports/page"
 import SearchPage from "./routes/search/page"
 import ExploreTvShows from "./routes/tv/[element]/page"
 import TVSingle from "./routes/tv/id/[id]/page"
@@ -128,6 +129,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={null}>
             <ReportPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports",
+        element: (
+          <Suspense fallback={null}>
+            <AllReportsPage />
           </Suspense>
         ),
       },

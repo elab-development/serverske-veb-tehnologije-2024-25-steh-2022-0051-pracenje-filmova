@@ -28,7 +28,7 @@ import type { BugFlagEnum } from "backend"
 import { useForm } from "react-hook-form"
 import z from "zod"
 
-const bugFlagEnum: BugFlagEnum[] = [
+export const bugFlagEnum: BugFlagEnum[] = [
   "UI",
   "Performance",
   "Backend",
@@ -47,11 +47,11 @@ const reportSchema = z.object({
   content: z
     .string()
     .min(10, { message: "Content must be at least 10 characters" })
-    .max(1000, { message: "Content must be at most 1000 characters" }),
+    .max(1500, { message: "Content must be at most 1500 characters" }),
 })
 
 const ReportPage = () => {
-  useProtectedPage()
+  const { session } = useProtectedPage()
   const { toast } = useToast()
 
   const reportMutation = useMutation(
@@ -83,6 +83,10 @@ const ReportPage = () => {
         .setDescription("Thank you for your feedback."),
     )
     form.reset()
+  }
+
+  if (!session?.user) {
+    return null
   }
   return (
     <section>

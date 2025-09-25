@@ -14,10 +14,12 @@ import WatchlistMediaItem, {
 } from "./_components/WatchlistMediaItem"
 
 const WatchlistPage = () => {
-  useProtectedPage()
+  const { session } = useProtectedPage()
 
   const watchList = useWatchListDetails()
   useSetPageTitle("Watchlist")
+
+  if (!session?.user) return null
   return (
     <section>
       <div className="flex items-end justify-between">
