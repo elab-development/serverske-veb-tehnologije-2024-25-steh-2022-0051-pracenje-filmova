@@ -9,7 +9,7 @@ import { queryClient } from "./lib/trpc"
 import SignUpPage from "./routes/auth/signup/page"
 import ErrorRoute from "./routes/error"
 import NotFound from "./routes/not-found"
-import ReportPage from "./routes/report/page"
+import ReportPage from "./routes/reports/new/page"
 import SearchPage from "./routes/search/page"
 import ExploreTvShows from "./routes/tv/[element]/page"
 import TVSingle from "./routes/tv/id/[id]/page"
@@ -124,7 +124,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/report",
+        path: "/reports/new",
         element: (
           <Suspense fallback={null}>
             <ReportPage />

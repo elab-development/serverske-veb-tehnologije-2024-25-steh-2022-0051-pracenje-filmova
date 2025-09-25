@@ -52,7 +52,7 @@ const ProfileDropdown = () => {
           <SettingsIcon /> Profile settings
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to={"/report"}>
+          <Link to={"/reports/new"}>
             <BugIcon /> Report a bug
           </Link>
         </DropdownMenuItem>
