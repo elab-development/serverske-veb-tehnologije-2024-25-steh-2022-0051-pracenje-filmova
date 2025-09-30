@@ -21,44 +21,40 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+const forgotPasswordSchema = z.object({
+  email: z.string().email().min(1, "Email is required"),
 })
 
-function LoginPage() {
-  useSetPageTitle("Login")
-
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+function ForgotPasswordPage() {
+  useSetPageTitle("Forgot password")
+  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   })
-
+  const navigate = useNavigate()
   const { toast } = useToast()
-  const navigation = useNavigate()
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
-    await authClient.signIn.email(
+  async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
+    await authClient.requestPasswordReset(
       {
         email: values.email,
-        password: values.password,
+        redirectTo: `${window.location.origin}/auth/reset-password`,
       },
       {
         onSuccess: () => {
-          navigation("/")
+          navigate("/")
           toast(
             ToastOptions.create()
-              .setTitle("Success")
-              .setDescription("You have successfully logged in!"),
+              .setTitle("Reset email sent")
+              .setDescription("Check your inbox for further instructions."),
           )
         },
         onError: (err) => {
           toast(
             ToastOptions.createDestructive()
-              .setTitle("Error logging in")
+              .setTitle("Error signing up in")
               .setDescription(
                 err.error.message ?? "An unknown error occurred.",
               ),
@@ -70,12 +66,12 @@ function LoginPage() {
 
   return (
     <section>
-      <SectionTitle>Login</SectionTitle>
+      <SectionTitle>Forgot password</SectionTitle>
       <Separator className="mb-12 mt-2" />
       <div className="grid place-items-center">
         <div className="w-full max-w-sm space-y-8">
           <h2 className="relative text-lg font-bold lg:text-xl">
-            Welcome back!
+            Forgot your password?
           </h2>
           <Form {...form}>
             <form
@@ -95,26 +91,13 @@ function LoginPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <Button
                 type="submit"
                 className="w-full"
                 disabled={form.formState.isSubmitting}
               >
-                Login
+                Reset password
               </Button>
             </form>
           </Form>
@@ -125,16 +108,7 @@ function LoginPage() {
             className="!mt-4 w-full"
             disabled={form.formState.isSubmitting}
           >
-            <Link to="/auth/signup">Don't have an account? Sign up</Link>
-          </Button>
-          <Button
-            asChild
-            type="button"
-            variant={"link"}
-            className="!mt-0 w-full"
-            disabled={form.formState.isSubmitting}
-          >
-            <Link to="/auth/forgot-password">Forgot password?</Link>
+            <Link to="/auth/signup">New to Movie app? Sign up!</Link>
           </Button>
         </div>
       </div>
@@ -142,4 +116,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default ForgotPasswordPage

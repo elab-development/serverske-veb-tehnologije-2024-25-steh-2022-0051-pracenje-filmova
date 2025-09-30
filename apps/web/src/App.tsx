@@ -6,6 +6,8 @@ import { Suspense, lazy } from "react"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import Layout from "./components/layout/layout"
 import { queryClient } from "./lib/trpc"
+import ForgotPasswordPage from "./routes/auth/forgot-password/page"
+import ResetPasswordPage from "./routes/auth/reset-password/page"
 import SignUpPage from "./routes/auth/signup/page"
 import ErrorRoute from "./routes/error"
 import NotFound from "./routes/not-found"
@@ -121,6 +123,22 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={null}>
             <SignUpPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/auth/forgot-password",
+        element: (
+          <Suspense fallback={null}>
+            <ForgotPasswordPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/auth/reset-password",
+        element: (
+          <Suspense fallback={null}>
+            <ResetPasswordPage />
           </Suspense>
         ),
       },

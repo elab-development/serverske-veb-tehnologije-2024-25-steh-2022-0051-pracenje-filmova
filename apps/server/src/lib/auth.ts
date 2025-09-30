@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm"
 import { db } from "../db/drizzle"
 import * as authSchema from "../db/schema/auth-schema"
 import { watchlist } from "../db/schema/watchlist-schema"
+import { sendEmail } from "./email"
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "sqlite",
@@ -23,6 +24,17 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+    async sendResetPassword(data) {
+      await sendEmail({
+        to: data.user.email,
+        subject: "Password Reset",
+
+        html: `<p>Click the link to reset your password: <a href="${data.url}">Reset</a></p>`,
+      })
+    },
+    async onPasswordReset(data) {
+      console.log("Password reset for user:", data.user.email)
+    },
   },
   databaseHooks: {
     user: {

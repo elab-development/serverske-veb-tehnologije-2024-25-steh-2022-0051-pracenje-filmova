@@ -8,6 +8,8 @@ const envSchema = z.object({
   BETTER_AUTH_SECRET: z.string().min(1),
   BETTER_AUTH_URL: z.string().url(),
   DB_FILE_NAME: z.string().min(1).default("file:src/db/local.db"),
+  ETHEREAL_USERNAME: z.string().min(1),
+  ETHEREAL_PASSWORD: z.string().min(1),
 })
 
 try {

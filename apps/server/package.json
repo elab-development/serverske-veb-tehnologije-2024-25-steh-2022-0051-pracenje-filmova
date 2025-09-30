@@ -17,7 +17,8 @@
     "lint": "eslint --fix src test",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "db:push": "drizzle-kit push --config drizzle.config.mjs"
+    "db:push": "drizzle-kit push --config drizzle.config.mjs",
+    "db:studio": "drizzle-kit studio --config drizzle.config.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
@@ -29,6 +30,7 @@
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
+    "nodemailer": "^7.0.6",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -37,6 +39,7 @@
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.0.10",
+    "@types/nodemailer": "^7.0.2",
     "@types/supertest": "^6.0.3",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9.30.1",

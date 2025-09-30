@@ -15,50 +15,69 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/components/ui/use-toast"
 import { useSetPageTitle } from "@/hooks/use-set-page-title"
 import { authClient } from "@/lib/auth-client"
+import { AppError } from "@/lib/models/app-error"
 import { ToastOptions } from "@/lib/models/toast-options"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-})
-
-function LoginPage() {
-  useSetPageTitle("Login")
-
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+const resetPasswordSchema = z
+  .object({
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
+    confirmNewPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters"),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
   })
 
-  const { toast } = useToast()
-  const navigation = useNavigate()
+function ResetPasswordPage() {
+  useSetPageTitle("Reset password")
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
-    await authClient.signIn.email(
+  const form = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      newPassword: "",
+      confirmNewPassword: "",
+    },
+  })
+  const navigate = useNavigate()
+  const { toast } = useToast()
+
+  const token = useMemo(() => {
+    return new URLSearchParams(window.location.search).get("token")
+  }, [])
+
+  if (!token) {
+    throw new AppError("Invalid or missing token")
+  }
+
+  async function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
+    if (!token) {
+      throw new AppError("Invalid or missing token")
+    }
+    await authClient.resetPassword(
       {
-        email: values.email,
-        password: values.password,
+        newPassword: values.newPassword,
+        token,
       },
       {
         onSuccess: () => {
-          navigation("/")
+          navigate("/")
           toast(
             ToastOptions.create()
-              .setTitle("Success")
-              .setDescription("You have successfully logged in!"),
+              .setTitle("Password successfully reset")
+              .setDescription("You can now log in with your new password."),
           )
         },
         onError: (err) => {
           toast(
             ToastOptions.createDestructive()
-              .setTitle("Error logging in")
+              .setTitle("Error signing up in")
               .setDescription(
                 err.error.message ?? "An unknown error occurred.",
               ),
@@ -70,12 +89,12 @@ function LoginPage() {
 
   return (
     <section>
-      <SectionTitle>Login</SectionTitle>
+      <SectionTitle>Reset password</SectionTitle>
       <Separator className="mb-12 mt-2" />
       <div className="grid place-items-center">
         <div className="w-full max-w-sm space-y-8">
           <h2 className="relative text-lg font-bold lg:text-xl">
-            Welcome back!
+            Reset your password
           </h2>
           <Form {...form}>
             <form
@@ -84,12 +103,12 @@ function LoginPage() {
             >
               <FormField
                 control={form.control}
-                name="email"
+                name="newPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>New password</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn@gmail.com" {...field} />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -97,10 +116,10 @@ function LoginPage() {
               />
               <FormField
                 control={form.control}
-                name="password"
+                name="confirmNewPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Confirm new password</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -114,7 +133,7 @@ function LoginPage() {
                 className="w-full"
                 disabled={form.formState.isSubmitting}
               >
-                Login
+                Reset password
               </Button>
             </form>
           </Form>
@@ -125,16 +144,7 @@ function LoginPage() {
             className="!mt-4 w-full"
             disabled={form.formState.isSubmitting}
           >
-            <Link to="/auth/signup">Don't have an account? Sign up</Link>
-          </Button>
-          <Button
-            asChild
-            type="button"
-            variant={"link"}
-            className="!mt-0 w-full"
-            disabled={form.formState.isSubmitting}
-          >
-            <Link to="/auth/forgot-password">Forgot password?</Link>
+            <Link to="/auth/signup">New to Movie app? Sign up!</Link>
           </Button>
         </div>
       </div>
@@ -142,4 +152,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default ResetPasswordPage
