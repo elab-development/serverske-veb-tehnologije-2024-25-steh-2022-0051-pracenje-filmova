@@ -5,6 +5,7 @@ import { env } from "./env.js"
 export type { BugFlagEnum, BugStatusEnum } from "./db/schema/report-schema.js"
 export type { AuthServer } from "./lib/auth"
 export type { AppRouter } from "./trpc/routers/_app.js"
+
 const port = env.PORT
 const server = app.listen(port, () => {
   /* eslint-disable no-console */

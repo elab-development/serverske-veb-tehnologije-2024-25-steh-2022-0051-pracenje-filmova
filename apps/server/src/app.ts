@@ -6,6 +6,7 @@ import helmet from "helmet"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import morgan from "morgan"
 import { auth } from "./lib/auth.js"
+import { errorHandler, notFound } from "./middleware/error-handler.js"
 import { createContext } from "./trpc/context.js"
 import { appRouter } from "./trpc/routers/_app.js"
 
@@ -30,5 +31,8 @@ app.use(
     createContext: createContext,
   }),
 )
+
+app.use(notFound)
+app.use(errorHandler)
 
 export default app
