@@ -32,7 +32,8 @@ const WatchListButton = ({
         watchList.isLoading ||
         watchList.isError ||
         watchListMutate.isPending ||
-        watchListMutate.isPaused
+        watchListMutate.isPaused ||
+        !watchList.isEnabled
       }
       className={cn("border", isWatchlisted && "border-primary", className)}
       {...props}

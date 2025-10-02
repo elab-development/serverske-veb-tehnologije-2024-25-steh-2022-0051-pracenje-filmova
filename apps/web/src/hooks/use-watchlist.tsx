@@ -1,4 +1,5 @@
 import { useTMDB } from "@/hooks/use-tmdb"
+import { authClient } from "@/lib/auth-client"
 import { trpc } from "@/lib/trpc"
 import {
   useMutation,
@@ -11,7 +12,12 @@ export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
 export type WatchList = Array<WatchListItem>
 
 export const useWatchList = () => {
-  const queryTrpc = useQuery(trpc.watchlist.getUserWatchlist.queryOptions())
+  const { data } = authClient.useSession()
+  const queryTrpc = useQuery(
+    trpc.watchlist.getUserWatchlist.queryOptions(undefined, {
+      enabled: !!data?.user,
+    }),
+  )
 
   return {
     ...queryTrpc,
