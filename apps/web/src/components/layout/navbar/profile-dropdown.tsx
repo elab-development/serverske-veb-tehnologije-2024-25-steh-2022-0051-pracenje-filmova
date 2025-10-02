@@ -7,7 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useToast } from "@/components/ui/use-toast"
 import { authClient } from "@/lib/auth-client"
+import { ToastOptions } from "@/lib/models/toast-options"
 import {
   BugIcon,
   FlagIcon,
@@ -22,6 +24,7 @@ import { Link, useNavigate } from "react-router-dom"
 const ProfileDropdown = () => {
   const { data, isPending } = authClient.useSession()
   const navigate = useNavigate()
+  const { toast } = useToast()
   if (isPending) {
     return (
       <Button
@@ -29,6 +32,16 @@ const ProfileDropdown = () => {
         size={"icon"}
         className="pointer-events-none animate-pulse"
       ></Button>
+    )
+  }
+
+  const signOut = async () => {
+    await authClient.signOut()
+    navigate("/")
+    toast(
+      ToastOptions.createDefault()
+        .setTitle("Signed out")
+        .setDescription("You have been signed out successfully."),
     )
   }
   return (
@@ -69,12 +82,7 @@ const ProfileDropdown = () => {
         )}
         <DropdownMenuSeparator />
         {data?.user ? (
-          <DropdownMenuItem
-            onClick={async () => {
-              await authClient.signOut()
-              navigate("/")
-            }}
-          >
+          <DropdownMenuItem onClick={signOut}>
             <LogOutIcon /> Sign out
           </DropdownMenuItem>
         ) : (
