@@ -1,4 +1,4 @@
-import type { AuthServer } from "backend"
+import type { AuthServer } from "@/types/server"
 import {
   customSessionClient,
   inferAdditionalFields,
