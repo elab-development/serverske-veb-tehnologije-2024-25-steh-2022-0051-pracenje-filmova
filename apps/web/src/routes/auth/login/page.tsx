@@ -19,7 +19,7 @@ import { ToastOptions } from "@/lib/models/toast-options"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
-import { z } from "zod/v4"
+import * as z from "zod/v4"
 
 const loginSchema = z.object({
   email: z.email(),

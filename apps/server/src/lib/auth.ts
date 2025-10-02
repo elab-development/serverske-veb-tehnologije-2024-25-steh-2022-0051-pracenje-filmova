@@ -41,7 +41,7 @@ export const auth = betterAuth({
     user: {
       create: {
         async after(user) {
-          const createdWatchlist = await db.insert(watchlist).values({
+          await db.insert(watchlist).values({
             userId: user.id,
             jsonData: JSON.stringify([]),
             id: crypto.randomUUID(),

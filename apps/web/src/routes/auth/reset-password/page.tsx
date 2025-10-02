@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
-import { z } from "zod/v4"
+import * as z from "zod/v4"
 
 const resetPasswordSchema = z
   .object({

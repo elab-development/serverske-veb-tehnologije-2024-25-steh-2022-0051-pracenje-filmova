@@ -8,7 +8,7 @@ import {
   isNotNull,
   like,
 } from "drizzle-orm"
-import { z } from "zod/v4"
+import * as z from "zod/v4"
 import { db } from "../../db/drizzle"
 import { user } from "../../db/schema/auth-schema"
 import {

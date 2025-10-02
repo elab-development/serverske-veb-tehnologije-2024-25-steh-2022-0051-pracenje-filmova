@@ -1,4 +1,4 @@
-import { z } from "zod/v4"
+import * as z from "zod/v4"
 import { publicProcedure, router } from "../trpc"
 import { reportsRouter } from "./reports"
 import { watchListRouter } from "./watchlist"

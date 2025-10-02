@@ -4,7 +4,7 @@ import { auth } from "../lib/auth"
 
 export const createContext = async ({
   req,
-  res,
+  res: _res,
 }: trpcExpress.CreateExpressContextOptions) => {
   const authData = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
