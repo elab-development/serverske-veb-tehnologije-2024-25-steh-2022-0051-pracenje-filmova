@@ -5,6 +5,7 @@ import helmet from "helmet"
 
 import * as trpcExpress from "@trpc/server/adapters/express"
 import morgan from "morgan"
+import { env } from "./env.js"
 import { auth } from "./lib/auth.js"
 import { errorHandler, notFound } from "./middleware/error-handler.js"
 import { createContext } from "./trpc/context.js"
@@ -15,7 +16,7 @@ app.use(morgan("dev"))
 app.use(helmet())
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   }),

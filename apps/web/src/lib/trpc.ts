@@ -6,7 +6,7 @@ export const queryClient = new QueryClient()
 const trpcClient = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: "http://localhost:3000/trpc",
+      url: `${import.meta.env.VITE_SERVER_BASE_URL}/trpc`,
       fetch(url, options) {
         return fetch(url, {
           ...options,

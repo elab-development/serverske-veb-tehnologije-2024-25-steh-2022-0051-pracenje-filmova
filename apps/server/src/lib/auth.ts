@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm"
 import { db } from "../db/drizzle"
 import * as authSchema from "../db/schema/auth-schema"
 import { watchlist } from "../db/schema/watchlist-schema"
+import { env } from "../env"
 import { sendEmail } from "./email"
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -49,7 +50,7 @@ export const auth = betterAuth({
       },
     },
   },
-  trustedOrigins: ["http://localhost:5173"],
+  trustedOrigins: [env.CLIENT_URL],
   plugins: [
     customSession(async ({ user, session }) => {
       const userRole = await db.query.user.findFirst({

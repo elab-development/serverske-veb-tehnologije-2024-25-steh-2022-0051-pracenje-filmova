@@ -8,9 +8,7 @@ export type { AppRouter } from "./trpc/routers/_app.js"
 
 const port = env.PORT
 const server = app.listen(port, () => {
-  /* eslint-disable no-console */
-  console.log(`Listening: http://localhost:${port}`)
-  /* eslint-enable no-console */
+  console.log(`Listening on port ${port}`)
 })
 
 server.on("error", (err) => {
