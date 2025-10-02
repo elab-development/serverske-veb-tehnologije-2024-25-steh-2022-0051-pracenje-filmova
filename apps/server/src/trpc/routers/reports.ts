@@ -20,6 +20,15 @@ import { adminProcedure, protectedProcedure, router } from "../trpc"
 
 export const reportsRouter = router({
   submitReport: protectedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/reports/submit",
+        tags: ["Reports"],
+        summary: "Submit a bug report",
+        protect: true,
+      },
+    })
     .input(
       z.object({
         title: z.string().min(10).max(100),
@@ -40,7 +49,15 @@ export const reportsRouter = router({
     }),
 
   getAllReports: adminProcedure
-    //add some filters
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/reports",
+        tags: ["Reports"],
+        summary: "Get all bug reports (Admin only)",
+        protect: true,
+      },
+    })
     .input(
       z.object({
         status: z.enum(["resolved", "unresolved"]).optional(),
@@ -102,7 +119,16 @@ export const reportsRouter = router({
       }
     }),
 
-  changeReportStatus: adminProcedure
+  updateReportStatus: adminProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/reports/{reportId}/status",
+        tags: ["Reports"],
+        summary: "Update the status of a bug report (Admin only)",
+        protect: true,
+      },
+    })
     .input(
       z.object({
         reportId: z.string().min(1),
@@ -120,5 +146,25 @@ export const reportsRouter = router({
         .where(eq(bugReport.id, input.reportId))
         .returning()
       return report[0]
+    }),
+
+  deleteReport: adminProcedure
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/reports/{reportId}/delete",
+        tags: ["Reports"],
+        summary: "Delete a bug report (Admin only)",
+        protect: true,
+      },
+    })
+    .input(
+      z.object({
+        reportId: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await db.delete(bugReport).where(eq(bugReport.id, input.reportId))
+      return { success: true }
     }),
 })

@@ -14,7 +14,7 @@ export type WatchList = Array<WatchListItem>
 export const useWatchList = () => {
   const { data } = authClient.useSession()
   const queryTrpc = useQuery(
-    trpc.watchlist.getUserWatchlist.queryOptions(undefined, {
+    trpc.watchlist.getWatchlist.queryOptions(undefined, {
       enabled: !!data?.user,
     }),
   )
@@ -59,15 +59,15 @@ export const useWatchListDetails = () => {
 export const useMutateWatchlist = () => {
   const queryClient = useQueryClient()
   const mutation = useMutation(
-    trpc.watchlist.updateUserWatchlist.mutationOptions({
+    trpc.watchlist.updateWatchlist.mutationOptions({
       onMutate: async (newItem) => {
         //optimistic update
 
         await queryClient.cancelQueries({
-          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
         })
         queryClient.setQueryData(
-          trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+          trpc.watchlist.getWatchlist.queryOptions().queryKey,
           (old) => {
             if (!old) return
             const parsedData = JSON.parse(old.jsonData) as WatchListItem[]
@@ -97,7 +97,7 @@ export const useMutateWatchlist = () => {
       },
       onSettled: () => {
         queryClient.invalidateQueries({
-          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
         })
       },
     }),
@@ -112,7 +112,7 @@ export const useImportWatchlist = () => {
     trpc.watchlist.importWatchlist.mutationOptions({
       onSettled: () => {
         queryClient.invalidateQueries({
-          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
         })
       },
     }),
@@ -127,7 +127,7 @@ export const useClearWatchlist = () => {
     trpc.watchlist.clearWatchlist.mutationOptions({
       onSettled: () => {
         queryClient.invalidateQueries({
-          queryKey: trpc.watchlist.getUserWatchlist.queryOptions().queryKey,
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
         })
       },
     }),

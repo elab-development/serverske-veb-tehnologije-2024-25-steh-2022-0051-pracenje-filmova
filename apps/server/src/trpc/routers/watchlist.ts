@@ -6,7 +6,7 @@ import { protectedProcedure, router } from "../trpc"
 export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
 
 export const watchListRouter = router({
-  getUserWatchlist: protectedProcedure.query(async ({ ctx }) => {
+  getWatchlist: protectedProcedure.query(async ({ ctx }) => {
     const watchlistEntity = await db.query.watchlist.findFirst({
       where: eq(watchlist.userId, ctx.user.id),
     })
@@ -24,7 +24,7 @@ export const watchListRouter = router({
     }
     return watchlistEntity
   }),
-  updateUserWatchlist: protectedProcedure
+  updateWatchlist: protectedProcedure
     .input(
       z.object({
         mediaType: z.string().refine((val) => val === "movie" || val === "tv"),

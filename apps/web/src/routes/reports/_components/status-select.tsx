@@ -22,7 +22,7 @@ const StatusSelect = ({
 }) => {
   const [status, setStatus] = useState(currentStatus)
   const changeStatusMutation = useMutation(
-    trpc.reports.changeReportStatus.mutationOptions({
+    trpc.reports.updateReportStatus.mutationOptions({
       onMutate: (data) => {
         setStatus(data.status ? "resolved" : "unresolved")
         onMutate?.(reportId, data.status ? "resolved" : "unresolved")
