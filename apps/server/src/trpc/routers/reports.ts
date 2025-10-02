@@ -9,13 +9,13 @@ import {
   like,
 } from "drizzle-orm"
 import z from "zod"
-import { db } from "../../../db/drizzle"
-import { user } from "../../../db/schema/auth-schema"
+import { db } from "../../db/drizzle"
+import { user } from "../../db/schema/auth-schema"
 import {
   BugFlagEnum,
   bugFlagEnum,
   bugReport,
-} from "../../../db/schema/report-schema"
+} from "../../db/schema/report-schema"
 import { adminProcedure, protectedProcedure, router } from "../trpc"
 
 export const reportsRouter = router({

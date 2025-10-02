@@ -1,6 +1,6 @@
 import * as trpcExpress from "@trpc/server/adapters/express"
 import { fromNodeHeaders } from "better-auth/node"
-import { auth } from "../auth"
+import { auth } from "../lib/auth"
 
 export const createContext = async ({
   req,

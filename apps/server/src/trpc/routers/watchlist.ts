@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm"
 import z from "zod"
-import { db } from "../../../db/drizzle"
-import { watchlist } from "../../../db/schema/watchlist-schema"
+import { db } from "../../db/drizzle"
+import { watchlist } from "../../db/schema/watchlist-schema"
 import { protectedProcedure, router } from "../trpc"
 export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
 
