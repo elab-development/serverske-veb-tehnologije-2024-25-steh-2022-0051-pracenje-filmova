@@ -8,7 +8,7 @@ import {
   isNotNull,
   like,
 } from "drizzle-orm"
-import z from "zod"
+import { z } from "zod/v4"
 import { db } from "../../db/drizzle"
 import { user } from "../../db/schema/auth-schema"
 import {
@@ -22,7 +22,7 @@ export const reportsRouter = router({
   submitReport: protectedProcedure
     .input(
       z.object({
-        title: z.string().min(2).max(100),
+        title: z.string().min(10).max(100),
         flag: z
           .string()
           .refine((val) => bugFlagEnum.includes(val as BugFlagEnum)),
@@ -47,7 +47,7 @@ export const reportsRouter = router({
         flag: z.enum(bugFlagEnum).optional(),
         creatorId: z.string().optional(),
         adminId: z.string().optional(),
-        limit: z.number().min(1).max(100).default(10),
+        limit: z.number().min(1).max(50).default(10),
         offset: z.number().min(0).default(0),
         sortBy: z.enum(["createdAt", "title"]).default("createdAt"),
         sortOrder: z.enum(["asc", "desc"]).default("desc"),

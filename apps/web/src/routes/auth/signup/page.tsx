@@ -19,11 +19,11 @@ import { ToastOptions } from "@/lib/models/toast-options"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
-import { z } from "zod"
+import { z } from "zod/v4"
 
 const signupSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.email(),
+  password: z.string().min(8),
   fullName: z.string().min(2).max(80),
 })
 

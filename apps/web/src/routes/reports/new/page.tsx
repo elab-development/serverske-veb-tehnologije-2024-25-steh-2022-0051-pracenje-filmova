@@ -27,7 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import type { BugFlagEnum } from "backend"
 import { useForm } from "react-hook-form"
-import z from "zod"
+import z from "zod/v4"
 
 export const bugFlagEnum: BugFlagEnum[] = [
   "UI",
@@ -40,7 +40,7 @@ export const bugFlagEnum: BugFlagEnum[] = [
 const reportSchema = z.object({
   title: z
     .string()
-    .min(2, { message: "Title must be at least 2 characters" })
+    .min(10, { message: "Title must be at least 2 characters" })
     .max(100, { message: "Title must be at most 100 characters" }),
   flag: z.string().refine((val) => bugFlagEnum.includes(val as BugFlagEnum), {
     message: "Invalid flag",
