@@ -11,7 +11,7 @@ import {
 export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
 export type WatchList = Array<WatchListItem>
 
-export const useWatchList = () => {
+export const useWatchlist = () => {
   const { data } = authClient.useSession()
   const queryTrpc = useQuery(
     trpc.watchlist.getWatchlist.queryOptions(undefined, {
@@ -30,9 +30,9 @@ export const useWatchList = () => {
   }
 }
 
-export const useWatchListDetails = () => {
+export const useWatchlistDetails = () => {
   const tmdb = useTMDB()
-  const watchList = useWatchList()
+  const watchList = useWatchlist()
   //getting watchlist details from local storage with react query
   const query = useQueries({
     queries:

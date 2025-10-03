@@ -1,7 +1,7 @@
 import {
   WatchListItem,
   useMutateWatchlist,
-  useWatchList,
+  useWatchlist,
 } from "@/hooks/use-watchlist"
 import { cn } from "@/lib/utils"
 import { HeartIcon } from "lucide-react"
@@ -19,7 +19,7 @@ const WatchListButton = ({
   mediaId: number
   withText?: boolean
 }) => {
-  const watchList = useWatchList()
+  const watchList = useWatchlist()
   const isWatchlisted = watchList.data?.jsonData.some(
     (item) => item.id === mediaId && item.mediaType === mediaType,
   )

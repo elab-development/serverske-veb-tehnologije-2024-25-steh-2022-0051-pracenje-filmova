@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import react from "@vitejs/plugin-react"
 import path from "path"
 import { visualizer } from "rollup-plugin-visualizer"
@@ -16,10 +15,6 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
   },
   preview: {
     port: 5173,

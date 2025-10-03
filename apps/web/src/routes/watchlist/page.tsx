@@ -3,7 +3,7 @@ import SectionTitle from "@/components/ui/section-title"
 import { Separator } from "@/components/ui/separator"
 import { useProtectedPage } from "@/hooks/use-protected-page"
 import { useSetPageTitle } from "@/hooks/use-set-page-title"
-import { useWatchListDetails } from "@/hooks/use-watchlist"
+import { useWatchlistDetails } from "@/hooks/use-watchlist"
 import ClearWatchlist from "./_components/ClearWatchlist"
 import {
   ExportWatchlist,
@@ -16,7 +16,7 @@ import WatchlistMediaItem, {
 const WatchlistPage = () => {
   const { session } = useProtectedPage()
 
-  const watchList = useWatchListDetails()
+  const watchList = useWatchlistDetails()
   useSetPageTitle("Watchlist")
 
   if (!session?.user) return null

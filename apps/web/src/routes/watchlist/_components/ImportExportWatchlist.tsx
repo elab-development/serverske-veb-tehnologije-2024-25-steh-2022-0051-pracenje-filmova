@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { useImportWatchlist, useWatchList } from "@/hooks/use-watchlist"
+import { useImportWatchlist, useWatchlist } from "@/hooks/use-watchlist"
 import { ToastOptions } from "@/lib/models/toast-options"
 import { ImportIcon, Link2Icon } from "lucide-react"
 import { useRef, useState } from "react"
@@ -88,7 +88,7 @@ export const ImportWatchlist = () => {
 }
 export const ExportWatchlist = () => {
   const [open, setOpen] = useState(false)
-  const currentWatchlist = useWatchList()
+  const currentWatchlist = useWatchlist()
   const code = currentWatchlist.data?.id || ""
   const { toast } = useToast()
   const inputRef = useRef<HTMLInputElement>(null)
