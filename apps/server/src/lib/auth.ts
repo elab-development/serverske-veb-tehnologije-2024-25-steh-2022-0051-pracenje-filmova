@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { customSession } from "better-auth/plugins"
+import { customSession, openAPI } from "better-auth/plugins"
 import { eq } from "drizzle-orm"
 import { db } from "../db/drizzle"
 import * as authSchema from "../db/schema/auth-schema"
@@ -52,6 +52,7 @@ export const auth = betterAuth({
   },
   trustedOrigins: [env.CLIENT_URL],
   plugins: [
+    openAPI(),
     customSession(async ({ user, session }) => {
       const userRole = await db.query.user.findFirst({
         where: eq(authSchema.user.id, user.id),

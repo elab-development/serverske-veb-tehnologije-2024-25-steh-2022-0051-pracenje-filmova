@@ -13,6 +13,9 @@ importers:
       '@libsql/client':
         specifier: ^0.15.15
         version: 0.15.15
+      '@scalar/express-api-reference':
+        specifier: ^0.8.20
+        version: 0.8.20
       '@trpc/server':
         specifier: ^11.5.1
         version: 11.5.1(typescript@5.9.2)
@@ -28,6 +31,9 @@ importers:
       drizzle-orm:
         specifier: ^0.44.5
         version: 0.44.5(@libsql/client@0.15.15)(kysely@0.28.7)
+      drizzle-zod:
+        specifier: ^0.8.3
+        version: 0.8.3(drizzle-orm@0.44.5(@libsql/client@0.15.15)(kysely@0.28.7))(zod@4.1.11)
       express:
         specifier: ^5.1.0
         version: 5.1.0
@@ -1615,6 +1621,22 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@scalar/core@0.3.18':
+    resolution: {integrity: sha512-STi6LiJTqOYwz4VhKi61SYhqOTT8TJ3M//XQyT3OwwfY0iBR/HNKUNnHsIWJdwaoGO4Ida5jj4L0JmpKtwQxTQ==}
+    engines: {node: '>=20'}
+
+  '@scalar/express-api-reference@0.8.20':
+    resolution: {integrity: sha512-gO9lQ3kpJLXUH+G0MaKs3nFlX19McOLGctvffz/oxTtMD56FKotV6OiAI1uhTjZ1xskE4pj2u8RxNqCMIxciZQ==}
+    engines: {node: '>=20'}
+
+  '@scalar/openapi-types@0.4.0':
+    resolution: {integrity: sha512-vdFLzz7vETw6kS3bxWUHCBeFtJOnr1bk/+FXKyxKkd6TbcyT6USXkoelI704IaBdoXyOgGX10FD1IVrs4FwUow==}
+    engines: {node: '>=20'}
+
+  '@scalar/types@0.3.0':
+    resolution: {integrity: sha512-RVL4waBX2jpshVBU8l1J8gsG+Ai9oRoTN1Zc1+yaO2WG/ZMXOBtq1noJWpUk2c2i16E1oxmRZC8/nPNFRbkxog==}
+    engines: {node: '>=20'}
+
   '@simplewebauthn/browser@13.2.0':
     resolution: {integrity: sha512-N3fuA1AAnTo5gCStYoIoiasPccC+xPLx2YU88Dv0GeAmPQTWHETlZQq5xZ0DgUq1H9loXMWQH5qqUjcI7BHJ1A==}
 
@@ -2513,6 +2535,12 @@ packages:
       sqlite3:
         optional: true
 
+  drizzle-zod@0.8.3:
+    resolution: {integrity: sha512-66yVOuvGhKJnTdiqj1/Xaaz9/qzOdRJADpDa68enqS6g3t0kpNkwNYjUuaeXgZfO/UWuIM9HIhSlJ6C5ZraMww==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.0'
+      zod: ^3.25.0 || ^4.0.0
+
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -3111,6 +3139,11 @@ packages:
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
+  nanoid@5.1.5:
+    resolution: {integrity: sha512-Ir/+ZpE9fDsNH0hQ3C68uyThDXzYcim2EqcZ8zn8Chtt1iylPT9xXJB0kPCnqzgcEGikO9RxSrh63MsmVCU7Fw==}
+    engines: {node: ^18 || >=20}
     hasBin: true
 
   nanostores@1.0.1:
@@ -3854,6 +3887,10 @@ packages:
   type-fest@0.20.2:
     resolution: {integrity: sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==}
     engines: {node: '>=10'}
+
+  type-fest@4.41.0:
+    resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
+    engines: {node: '>=16'}
 
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -5568,6 +5605,25 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.51.0':
     optional: true
 
+  '@scalar/core@0.3.18':
+    dependencies:
+      '@scalar/types': 0.3.0
+
+  '@scalar/express-api-reference@0.8.20':
+    dependencies:
+      '@scalar/core': 0.3.18
+
+  '@scalar/openapi-types@0.4.0':
+    dependencies:
+      zod: 4.1.11
+
+  '@scalar/types@0.3.0':
+    dependencies:
+      '@scalar/openapi-types': 0.4.0
+      nanoid: 5.1.5
+      type-fest: 4.41.0
+      zod: 4.1.11
+
   '@simplewebauthn/browser@13.2.0': {}
 
   '@simplewebauthn/server@13.2.1':
@@ -6520,6 +6576,11 @@ snapshots:
       '@libsql/client': 0.15.15
       kysely: 0.28.7
 
+  drizzle-zod@0.8.3(drizzle-orm@0.44.5(@libsql/client@0.15.15)(kysely@0.28.7))(zod@4.1.11):
+    dependencies:
+      drizzle-orm: 0.44.5(@libsql/client@0.15.15)(kysely@0.28.7)
+      zod: 4.1.11
+
   dunder-proto@1.0.1:
     dependencies:
       call-bind-apply-helpers: 1.0.2
@@ -7253,6 +7314,8 @@ snapshots:
 
   nanoid@3.3.11: {}
 
+  nanoid@5.1.5: {}
+
   nanostores@1.0.1: {}
 
   natural-compare@1.4.0: {}
@@ -7914,6 +7977,8 @@ snapshots:
   type-detect@4.1.0: {}
 
   type-fest@0.20.2: {}
+
+  type-fest@4.41.0: {}
 
   type-is@1.6.18:
     dependencies:

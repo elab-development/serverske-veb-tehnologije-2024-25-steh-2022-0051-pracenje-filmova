@@ -8,6 +8,7 @@ import {
   isNotNull,
   like,
 } from "drizzle-orm"
+import { createSelectSchema } from "drizzle-zod"
 import * as z from "zod/v4"
 import { db } from "../../db/drizzle"
 import { user } from "../../db/schema/auth-schema"
@@ -17,6 +18,8 @@ import {
   bugReport,
 } from "../../db/schema/report-schema"
 import { adminProcedure, protectedProcedure, router } from "../trpc"
+
+const bugReportSelectSchema = createSelectSchema(bugReport)
 
 export const reportsRouter = router({
   submitReport: protectedProcedure
@@ -38,6 +41,7 @@ export const reportsRouter = router({
         content: z.string().min(10).max(1500),
       }),
     )
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await db.insert(bugReport).values({
         title: input.title,
@@ -69,6 +73,19 @@ export const reportsRouter = router({
         sortBy: z.enum(["createdAt", "title"]).default("createdAt"),
         sortOrder: z.enum(["asc", "desc"]).default("desc"),
         id: z.string().max(64).optional(),
+      }),
+    )
+    .output(
+      z.object({
+        reports: z.array(
+          z.object({
+            ...bugReportSelectSchema.shape,
+            adminName: z.string().nullable(),
+          }),
+        ),
+        numberOfPages: z.number(),
+        totalReports: z.number(),
+        showingReports: z.number(),
       }),
     )
     .query(async ({ input }) => {
@@ -135,6 +152,7 @@ export const reportsRouter = router({
         status: z.boolean().default(true),
       }),
     )
+    .output(z.object({ ...bugReportSelectSchema.shape }))
     .mutation(async ({ input, ctx }) => {
       const report = await db
         .update(bugReport)
@@ -158,6 +176,7 @@ export const reportsRouter = router({
         protect: true,
       },
     })
+    .output(z.object({ success: z.boolean() }))
     .input(
       z.object({
         reportId: z.string().min(1),

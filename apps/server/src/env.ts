@@ -15,6 +15,7 @@ const envSchema = z.object({
   SMTP_USER: z.string().min(1),
   SMTP_PASSWORD: z.string().min(1),
   CLIENT_URL: z.url().default("http://localhost:5173"),
+  SERVER_URL: z.url().default("http://localhost:3000"),
 })
 
 try {
