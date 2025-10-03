@@ -54,7 +54,7 @@ app.use(
 )
 
 app.use(
-  "/docs",
+  "/reference",
   apiReference({
     content: openApiDocument,
   }),

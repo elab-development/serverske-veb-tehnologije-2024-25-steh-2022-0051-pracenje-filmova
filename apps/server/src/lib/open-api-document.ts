@@ -10,7 +10,7 @@ export const openApiDocument = generateOpenApiDocument(appRouter, {
     cookieAuth: {
       type: "apiKey",
       in: "cookie",
-      name: "connect.better-auth.session-token",
+      name: "better-auth.session-token",
       description: "Authentication via cookie",
     },
   },

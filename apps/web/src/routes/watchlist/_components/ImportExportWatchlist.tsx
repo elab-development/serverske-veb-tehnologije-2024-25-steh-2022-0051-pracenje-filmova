@@ -25,14 +25,9 @@ export const ImportWatchlist = () => {
     // let object
 
     try {
-      importMutation.mutate(code)
-      // object = JSON.parse(code)
-      // if (
-      //   !Array.isArray(object) ||
-      //   object.length === 0 ||
-      //   object.some((item) => !item.mediaType || !item.id)
-      // )
-      //   throw new Error("Invalid import")
+      importMutation.mutate({
+        id: code,
+      })
     } catch (e) {
       toast(
         ToastOptions.createDestructive()

@@ -6,29 +6,63 @@ import { protectedProcedure, router } from "../trpc"
 export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
 
 export const watchListRouter = router({
-  getWatchlist: protectedProcedure.query(async ({ ctx }) => {
-    const watchlistEntity = await db.query.watchlist.findFirst({
-      where: eq(watchlist.userId, ctx.user.id),
+  getWatchlist: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/watchlist",
+        tags: ["Watchlist"],
+        summary: "Get the current user's watchlist",
+        protect: true,
+      },
     })
-    if (!watchlistEntity) {
-      // create new watchlist
-      const newWatchlist = await db
-        .insert(watchlist)
-        .values({
-          id: crypto.randomUUID(),
-          userId: ctx.user.id,
-          jsonData: JSON.stringify([]),
-        })
-        .returning()
-      return newWatchlist[0]
-    }
-    return watchlistEntity
-  }),
+    .input(z.void())
+    .output(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+        jsonData: z.string(),
+      }),
+    )
+    .query(async ({ ctx }) => {
+      const watchlistEntity = await db.query.watchlist.findFirst({
+        where: eq(watchlist.userId, ctx.user.id),
+      })
+      if (!watchlistEntity) {
+        // create new watchlist
+        const newWatchlist = await db
+          .insert(watchlist)
+          .values({
+            id: crypto.randomUUID(),
+            userId: ctx.user.id,
+            jsonData: JSON.stringify([]),
+          })
+          .returning()
+        return newWatchlist[0]
+      }
+      return watchlistEntity
+    }),
   updateWatchlist: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/watchlist",
+        tags: ["Watchlist"],
+        summary: "Add or remove an item from the current user's watchlist",
+        protect: true,
+      },
+    })
     .input(
       z.object({
         mediaType: z.string().refine((val) => val === "movie" || val === "tv"),
         id: z.number(),
+      }),
+    )
+    .output(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+        jsonData: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -64,8 +98,26 @@ export const watchListRouter = router({
       return updatedWatchlist[0]
     }),
   importWatchlist: protectedProcedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/watchlist/import",
+        tags: ["Watchlist"],
+        summary: "Import another watchlist into the current user's watchlist",
+        protect: true,
+      },
+    })
     .input(
-      z.string(), // watchlist id to be imported
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .output(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+        jsonData: z.string(),
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const usersWatchlist = await db.query.watchlist.findFirst({
@@ -75,7 +127,7 @@ export const watchListRouter = router({
         throw new Error("User's watchlist not found")
       }
       const watchlistToImport = await db.query.watchlist.findFirst({
-        where: eq(watchlist.id, input),
+        where: eq(watchlist.id, input.id),
       })
       if (!watchlistToImport) {
         throw new Error("Watchlist to import not found")
@@ -104,18 +156,36 @@ export const watchListRouter = router({
         .returning()
       return updatedWatchlist[0]
     }),
-  clearWatchlist: protectedProcedure.mutation(async ({ ctx }) => {
-    const usersWatchlist = await db.query.watchlist.findFirst({
-      where: eq(watchlist.userId, ctx.user.id),
+  clearWatchlist: protectedProcedure
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/watchlist",
+        tags: ["Watchlist"],
+        summary: "Clear the current user's watchlist",
+        protect: true,
+      },
     })
-    if (!usersWatchlist) {
-      throw new Error("User's watchlist not found")
-    }
-    const updatedWatchlist = await db
-      .update(watchlist)
-      .set({ jsonData: JSON.stringify([]) })
-      .where(eq(watchlist.id, usersWatchlist.id))
-      .returning()
-    return updatedWatchlist[0]
-  }),
+    .input(z.void())
+    .output(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+        jsonData: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx }) => {
+      const usersWatchlist = await db.query.watchlist.findFirst({
+        where: eq(watchlist.userId, ctx.user.id),
+      })
+      if (!usersWatchlist) {
+        throw new Error("User's watchlist not found")
+      }
+      const updatedWatchlist = await db
+        .update(watchlist)
+        .set({ jsonData: JSON.stringify([]) })
+        .where(eq(watchlist.id, usersWatchlist.id))
+        .returning()
+      return updatedWatchlist[0]
+    }),
 })
