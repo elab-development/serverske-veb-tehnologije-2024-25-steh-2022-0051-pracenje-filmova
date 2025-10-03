@@ -46,7 +46,7 @@ const MediaItem = ({
           <div className="absolute right-0 top-0 bg-background/50 p-1">
             <span className="inline-flex h-9 w-9 flex-col items-center text-sm">
               <StarIcon className="inline" height={"1.5em"} />
-              {data.vote_average.toFixed(2)}
+              {data.vote_average?.toFixed(2) || "N/A"}
             </span>
           </div>
           <h3 className="mt-4 text-base font-semibold">
