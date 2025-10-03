@@ -21,12 +21,6 @@ const Navbar = () => {
           <SearchBar />
         </ReactRouterForm>
         <div className="flex items-center gap-2 sm:flex-1 sm:justify-end md:flex-none">
-          {/* <Button asChild variant={"secondary"} size={"icon"}>
-            <Link to="/watchlist">
-              <HeartIcon height={"1.125em"} />
-              <span className="sr-only">View watchlist</span>
-            </Link>
-          </Button> */}
           <ProfileDropdown />
           <MobileSidebar />
         </div>

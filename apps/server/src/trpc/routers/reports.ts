@@ -139,7 +139,7 @@ export const reportsRouter = router({
   updateReportStatus: adminProcedure
     .meta({
       openapi: {
-        method: "PATCH",
+        method: "PUT",
         path: "/reports/{reportId}/status",
         tags: ["Reports"],
         summary: "Update the status of a bug report (Admin only)",

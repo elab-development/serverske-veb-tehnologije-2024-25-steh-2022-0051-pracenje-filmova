@@ -16,7 +16,6 @@ import {
   HeartIcon,
   LogInIcon,
   LogOutIcon,
-  SettingsIcon,
   UserIcon,
 } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
@@ -61,9 +60,6 @@ const ProfileDropdown = () => {
           <Link to={"/watchlist"}>
             <HeartIcon /> Watchlist
           </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <SettingsIcon /> Profile settings
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to={"/reports/new"}>
