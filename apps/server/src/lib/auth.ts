@@ -33,9 +33,6 @@ export const auth = betterAuth({
         html: `<p>Click the link to reset your password: <a href="${data.url}">Reset</a></p>`,
       })
     },
-    async onPasswordReset(data) {
-      console.log("Password reset for user:", data.user.email)
-    },
   },
   databaseHooks: {
     user: {
