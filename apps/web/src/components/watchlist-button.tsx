@@ -24,17 +24,17 @@ const WatchListButton = ({
     (item) => item.id === mediaId && item.mediaType === mediaType,
   )
   const watchListMutate = useMutateWatchlist()
+  const isDisabled =
+    watchList.isLoading ||
+    watchList.isError ||
+    watchListMutate.isPending ||
+    watchListMutate.isPaused ||
+    !watchList.isEnabled
   return (
     <Button
       variant={isWatchlisted ? "default" : "outline"}
       onClick={() => watchListMutate.mutate({ id: mediaId, mediaType })}
-      disabled={
-        watchList.isLoading ||
-        watchList.isError ||
-        watchListMutate.isPending ||
-        watchListMutate.isPaused ||
-        !watchList.isEnabled
-      }
+      disabled={isDisabled}
       className={cn("border", isWatchlisted && "border-primary", className)}
       {...props}
       aria-label={

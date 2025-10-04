@@ -7,17 +7,28 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query"
+import { useEffect } from "react"
 
 export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
 export type WatchList = Array<WatchListItem>
 
 export const useWatchlist = () => {
   const { data } = authClient.useSession()
+  const queryClient = useQueryClient()
   const queryTrpc = useQuery(
     trpc.watchlist.getWatchlist.queryOptions(undefined, {
       enabled: !!data?.user,
     }),
   )
+
+  // Clear watchlist cache when user signs out
+  useEffect(() => {
+    if (!data?.user) {
+      queryClient.removeQueries({
+        queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
+      })
+    }
+  }, [data?.user])
 
   return {
     ...queryTrpc,
