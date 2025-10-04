@@ -22,8 +22,6 @@ export const ImportWatchlist = () => {
   const [code, setCode] = useState("")
   const { toast } = useToast()
   const handleImport = () => {
-    // let object
-
     try {
       importMutation.mutate({
         id: code,
@@ -38,7 +36,6 @@ export const ImportWatchlist = () => {
       return
     }
 
-    // importMutation.mutate(object)
     toast(
       ToastOptions.create()
         .setTitle("Watchlist imported")

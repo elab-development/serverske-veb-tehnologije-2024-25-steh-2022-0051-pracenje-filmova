@@ -23,8 +23,6 @@ const GenreMovies = lazy(() => import("@/routes/genre/movies/[id]/page"))
 const GenreTv = lazy(() => import("@/routes/genre/tv/[id]/page"))
 const ExploreMovies = lazy(() => import("@/routes/movies/[element]/page"))
 
-// const qc = new QueryClient()
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,10 +32,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <Suspense
-            fallback={null}
-            // fallback={<LoaderPinwheelIcon className="animate-spin h-12 w-12" />}
-          >
+          <Suspense fallback={null}>
             <Home />
           </Suspense>
         ),

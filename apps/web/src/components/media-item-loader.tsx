@@ -1,7 +1,3 @@
-// const MediaItemLoader = () => {
-//   return <div className="h-72 w-48 animate-pulse bg-secondary"></div>
-// }
-
 import { cn } from "@/lib/utils"
 import { Button } from "./ui/button"
 import { genreVariants } from "./ui/genre-badge"

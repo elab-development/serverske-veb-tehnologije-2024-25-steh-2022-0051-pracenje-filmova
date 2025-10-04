@@ -29,7 +29,6 @@ export const watchListRouter = router({
         where: eq(watchlist.userId, ctx.user.id),
       })
       if (!watchlistEntity) {
-        // create new watchlist
         const newWatchlist = await db
           .insert(watchlist)
           .values({

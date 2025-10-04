@@ -89,7 +89,7 @@ export const reportsRouter = router({
       }),
     )
     .query(async ({ input }) => {
-      const whereClauses = [isNotNull(bugReport.id)] // dummy clause to simplify logic
+      const whereClauses = [isNotNull(bugReport.id)] // dummy always true condition to simplify appending further conditions
       if (input.status) {
         whereClauses.push(eq(bugReport.status, input.status))
       }
