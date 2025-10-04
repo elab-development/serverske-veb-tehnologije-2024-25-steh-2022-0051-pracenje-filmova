@@ -1,14 +1,14 @@
 import react from "@vitejs/plugin-react"
 import path from "path"
-import { visualizer } from "rollup-plugin-visualizer"
 import { defineConfig } from "vite"
+import { analyzer } from "vite-bundle-analyzer"
 
 export default defineConfig({
   plugins: [
     react(),
-    visualizer({
-      gzipSize: true,
-      brotliSize: true,
+    analyzer({
+      analyzerMode: "static",
+      defaultSizes: "gzip",
     }),
   ],
   resolve: {

@@ -1,21 +1,25 @@
 import { TMDBProvider } from "@/hooks/use-tmdb"
-import LoginPage from "@/routes/auth/login/page"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { Suspense, lazy } from "react"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import Layout from "./components/layout/layout"
 import { queryClient } from "./lib/trpc"
-import ForgotPasswordPage from "./routes/auth/forgot-password/page"
-import ResetPasswordPage from "./routes/auth/reset-password/page"
-import SignUpPage from "./routes/auth/signup/page"
-import ErrorRoute from "./routes/error"
-import NotFound from "./routes/not-found"
-import ReportPage from "./routes/reports/new/page"
-import AllReportsPage from "./routes/reports/page"
-import SearchPage from "./routes/search/page"
-import ExploreTvShows from "./routes/tv/[element]/page"
-import TVSingle from "./routes/tv/id/[id]/page"
+const LoginPage = lazy(() => import("@/routes/auth/login/page"))
+const ForgotPasswordPage = lazy(
+  () => import("@/routes/auth/forgot-password/page"),
+)
+const ResetPasswordPage = lazy(
+  () => import("@/routes/auth/reset-password/page"),
+)
+const SignUpPage = lazy(() => import("@/routes/auth/signup/page"))
+const ErrorRoute = lazy(() => import("@/routes/error"))
+const NotFound = lazy(() => import("@/routes/not-found"))
+const ReportPage = lazy(() => import("@/routes/reports/new/page"))
+const AllReportsPage = lazy(() => import("@/routes/reports/page"))
+const SearchPage = lazy(() => import("@/routes/search/page"))
+const ExploreTvShows = lazy(() => import("@/routes/tv/[element]/page"))
+const TVSingle = lazy(() => import("@/routes/tv/id/[id]/page"))
 const Home = lazy(() => import("@/routes/home/page"))
 const WatchlistPage = lazy(() => import("@/routes/watchlist/page"))
 const MovieSingle = lazy(() => import("@/routes/movie/id/[id]/page"))
