@@ -1,0 +1,15 @@
+{
+  "name": "steh-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "web": "pnpm --filter web",
+    "backend": "pnpm --filter backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.3.0"
+}

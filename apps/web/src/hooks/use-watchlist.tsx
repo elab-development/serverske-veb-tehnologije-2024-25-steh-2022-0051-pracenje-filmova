@@ -1,0 +1,147 @@
+import { useTMDB } from "@/hooks/use-tmdb"
+import { authClient } from "@/lib/auth-client"
+import { trpc } from "@/lib/trpc"
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
+import { useEffect } from "react"
+
+export type WatchListItem = { mediaType: "movie" | "tv"; id: number }
+export type WatchList = Array<WatchListItem>
+
+export const useWatchlist = () => {
+  const { data } = authClient.useSession()
+  const queryClient = useQueryClient()
+  const queryTrpc = useQuery(
+    trpc.watchlist.getWatchlist.queryOptions(undefined, {
+      enabled: !!data?.user,
+    }),
+  )
+
+  // Clear watchlist cache when user signs out
+  useEffect(() => {
+    if (!data?.user) {
+      queryClient.removeQueries({
+        queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
+      })
+    }
+  }, [data?.user])
+
+  return {
+    ...queryTrpc,
+    data: queryTrpc.data
+      ? {
+          ...queryTrpc.data,
+          jsonData: JSON.parse(queryTrpc.data.jsonData) as WatchList,
+        }
+      : undefined,
+  }
+}
+
+export const useWatchlistDetails = () => {
+  const tmdb = useTMDB()
+  const watchList = useWatchlist()
+  //getting watchlist details from local storage with react query
+  const query = useQueries({
+    queries:
+      watchList.data?.jsonData.map((item) => ({
+        queryKey: [item.mediaType, item.id],
+        queryFn: () => {
+          if (item.mediaType === "movie") {
+            return tmdb.movies
+              .details(item.id)
+              .then((value) => ({ ...value, mediaType: item.mediaType }))
+          } else {
+            return tmdb.tvShows
+              .details(item.id)
+              .then((value) => ({ ...value, mediaType: item.mediaType }))
+          }
+        },
+        staleTime: Infinity,
+      })) || [],
+  })
+
+  return query
+}
+
+export const useMutateWatchlist = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(
+    trpc.watchlist.updateWatchlist.mutationOptions({
+      onMutate: async (newItem) => {
+        //optimistic update
+
+        await queryClient.cancelQueries({
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
+        })
+        queryClient.setQueryData(
+          trpc.watchlist.getWatchlist.queryOptions().queryKey,
+          (old) => {
+            if (!old) return
+            const parsedData = JSON.parse(old.jsonData) as WatchListItem[]
+            const existingItem = parsedData.findIndex(
+              (item) =>
+                item.id === newItem.id && item.mediaType === newItem.mediaType,
+            )
+            if (existingItem !== -1) {
+              return {
+                ...old,
+                jsonData: JSON.stringify(
+                  parsedData.filter((item) => item.id !== newItem.id),
+                ),
+              }
+            } else {
+              parsedData.push({
+                id: newItem.id,
+                mediaType: newItem.mediaType as "movie" | "tv",
+              })
+              return {
+                ...old,
+                jsonData: JSON.stringify(parsedData),
+              }
+            }
+          },
+        )
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
+        })
+      },
+    }),
+  )
+
+  return mutation
+}
+
+export const useImportWatchlist = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(
+    trpc.watchlist.importWatchlist.mutationOptions({
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
+        })
+      },
+    }),
+  )
+
+  return mutation
+}
+
+export const useClearWatchlist = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation(
+    trpc.watchlist.clearWatchlist.mutationOptions({
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.watchlist.getWatchlist.queryOptions().queryKey,
+        })
+      },
+    }),
+  )
+  return mutation
+}

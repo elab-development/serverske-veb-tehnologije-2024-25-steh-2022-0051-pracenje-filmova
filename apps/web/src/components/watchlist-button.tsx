@@ -1,0 +1,64 @@
+import {
+  WatchListItem,
+  useMutateWatchlist,
+  useWatchlist,
+} from "@/hooks/use-watchlist"
+import { cn } from "@/lib/utils"
+import { HeartIcon } from "lucide-react"
+import { Button, ButtonProps } from "./ui/button"
+
+const WatchListButton = ({
+  mediaId,
+  mediaType,
+  className,
+  children,
+  withText = false,
+  ...props
+}: ButtonProps & {
+  mediaType: WatchListItem["mediaType"]
+  mediaId: number
+  withText?: boolean
+}) => {
+  const watchList = useWatchlist()
+  const isWatchlisted = watchList.data?.jsonData.some(
+    (item) => item.id === mediaId && item.mediaType === mediaType,
+  )
+  const watchListMutate = useMutateWatchlist()
+  const isDisabled =
+    watchList.isLoading ||
+    watchList.isError ||
+    watchListMutate.isPending ||
+    watchListMutate.isPaused ||
+    !watchList.isEnabled
+  return (
+    <Button
+      variant={isWatchlisted ? "default" : "outline"}
+      onClick={() => watchListMutate.mutate({ id: mediaId, mediaType })}
+      disabled={isDisabled}
+      className={cn("border", isWatchlisted && "border-primary", className)}
+      {...props}
+      aria-label={
+        props["aria-label"] ||
+        (isWatchlisted ? "Remove from" : "Add to") + " watchlist"
+      }
+    >
+      {children ? (
+        children
+      ) : (
+        <>
+          <HeartIcon
+            height={"1em"}
+            className={cn(isWatchlisted && "fill-primary-foreground")}
+          />
+          {withText && (
+            <span className="ml-2">
+              {isWatchlisted ? "Watchlisted" : "Add to watchlist"}
+            </span>
+          )}
+        </>
+      )}
+    </Button>
+  )
+}
+
+export default WatchListButton
