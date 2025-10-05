@@ -1,4 +1,5 @@
 import { TMDBProvider } from "@/hooks/use-tmdb"
+import ErrorRoute from "@/routes/error"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { Suspense, lazy } from "react"
@@ -13,7 +14,7 @@ const ResetPasswordPage = lazy(
   () => import("@/routes/auth/reset-password/page"),
 )
 const SignUpPage = lazy(() => import("@/routes/auth/signup/page"))
-const ErrorRoute = lazy(() => import("@/routes/error"))
+
 const NotFound = lazy(() => import("@/routes/not-found"))
 const ReportPage = lazy(() => import("@/routes/reports/new/page"))
 const AllReportsPage = lazy(() => import("@/routes/reports/page"))

@@ -1,4 +1,5 @@
 import { authClient } from "@/lib/auth-client"
+import { AppError } from "@/lib/models/app-error"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -10,7 +11,7 @@ export const useProtectedPage = (role?: string) => {
       navigate("/auth/login")
     }
     if (!isPending && session?.user && role && session.user.role !== role) {
-      throw new Error("Unauthorized")
+      throw new AppError("Unauthorized")
     }
   }, [session, isPending, navigate])
   return { session, isPending, error }
